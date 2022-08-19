@@ -77,7 +77,7 @@ public class CardService {
 
    @Transactional(readOnly = true)
    public ResponseEntity<?> getAllCard() {
-      return new ResponseEntity<>(Message.success(cardRepository.findAllByOrderbyCreatedAtDesc())
+      return new ResponseEntity<>(Message.success(cardRepository.findAllByOrderByCreatedAtDesc())
               ,HttpStatus.OK);
    }
 

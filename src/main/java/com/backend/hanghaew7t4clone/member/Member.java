@@ -40,10 +40,10 @@ public class Member extends Timestamped {
 
 
     @Column(nullable = false)
-    private String profilephoro;
+    private String profilePhoto;
 
 
-    public Member(Long id, String email, String phoneNum, String name, String nickname, String password, String content, String profilephoro) {
+    public Member(Long id, String email, String phoneNum, String name, String nickname, String password, String content, String profilePhoto) {
         this.id = id;
         this.email = email;
         this.phoneNum = phoneNum;
@@ -51,7 +51,7 @@ public class Member extends Timestamped {
         this.nickname = nickname;
         this.password = password;
         this.content = content;
-        this.profilephoro = profilephoro;
+        this.profilePhoto = profilePhoto;
     }
 
     @Builder
@@ -63,7 +63,7 @@ public class Member extends Timestamped {
         this.nickname = nickname;
         this.password = password;
         this.content = " ";
-        this.profilephoro =" ";
+        this.profilePhoto =" ";
     }
 
     @Override
