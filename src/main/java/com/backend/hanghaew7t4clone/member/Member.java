@@ -9,30 +9,62 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import javax.persistence.*;
 import java.util.Objects;
 
-@Builder
+
 @Entity
-@Getter
 @NoArgsConstructor
-@AllArgsConstructor
+@Getter
 public class Member extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column
+    private String email;
+
+    @Column
+    private String phoneNum;
+
+    @Column(nullable = false)
+    private String name;
+
     @Column(nullable = false)
     private String nickname;
-
-
-    @Column(nullable = false)
-    private String gender;
-
-    @Column(nullable = false)
-    private String age;
-
     @Column(nullable = false)
     @JsonIgnore
     private String password;
+
+    @Column(nullable = false)
+    private String content;
+
+
+
+    @Column(nullable = false)
+    private String profilephoro;
+
+
+    public Member(Long id, String email, String phoneNum, String name, String nickname, String password, String content, String profilephoro) {
+        this.id = id;
+        this.email = email;
+        this.phoneNum = phoneNum;
+        this.name = name;
+        this.nickname = nickname;
+        this.password = password;
+        this.content = content;
+        this.profilephoro = profilephoro;
+    }
+
+    @Builder
+    public Member(Long id, String email, String name, String nickname, String password, String phoneNum) {
+        this.id = id;
+        this.email = email;
+        this.phoneNum =phoneNum;
+        this.name = name;
+        this.nickname = nickname;
+        this.password = password;
+        this.content = " ";
+        this.profilephoro =" ";
+    }
 
     @Override
     public boolean equals(Object o){
@@ -54,5 +86,6 @@ public class Member extends Timestamped {
     public boolean validatePassword(PasswordEncoder passwordEncoder, String password){
         return passwordEncoder.matches(password,this.password);
     }
+
 
 }

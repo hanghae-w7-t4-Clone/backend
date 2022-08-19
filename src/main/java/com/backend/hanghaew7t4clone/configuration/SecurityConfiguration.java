@@ -42,12 +42,6 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public WebSecurityCustomizer webSecurityCustomizer(){
-        return (web) -> web.ignoring()
-                .antMatchers("/h2-console/**");
-    }
-
-    @Bean
     @Order(SecurityProperties.BASIC_AUTH_ORDER)
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.cors();
@@ -68,10 +62,10 @@ public class SecurityConfiguration {
                 .and()
                 .authorizeRequests()
 
-//                .antMatchers("/api/member/**").permitAll()
-//                .antMatchers("/api/cards/**").permitAll()
-//                .antMatchers("/api/comments/**").permitAll()
-//                .antMatchers("/h2-console/**").permitAll()
+//                .antMatchers("/users/**").permitAll()
+//                .antMatchers("/cards/**").permitAll()
+//                .antMatchers("/comments/**").permitAll()
+//                .antMatchers("/profiles/**").permitAll()
                 .antMatchers("/**").permitAll()
                 .anyRequest().authenticated()
 
