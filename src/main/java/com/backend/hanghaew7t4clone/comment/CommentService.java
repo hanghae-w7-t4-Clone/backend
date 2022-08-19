@@ -38,7 +38,7 @@ public class CommentService {
         for (Comment comment : commentList) {
             commentResponseDtoList.add(CommentResponseDto.builder()
                     .id(comment.getId())
-                    .profilePhoto(comment.getMember().getProfilephoro())
+                    .profilePhoto(comment.getMember().getProfilePhoto())
                     .nickname(comment.getMember().getNickname())
                     .content(comment.getContent())
                     .build());
@@ -47,7 +47,7 @@ public class CommentService {
     }
 
     @Transactional
-    public ResponseDto<?> createComment(CommentRequestDto requestDto, Long cardId, HttpServletRequest request) {
+    public ResponseDto<?> createComment(CommentRequestDto commentRequestDto, Long cardId, HttpServletRequest request) {
         if(null == request.getHeader("Authorization")) {
             return ResponseDto.fail("MEMBER_NOT_FOUND", "로그인이 필요합니다.");
         }
@@ -65,9 +65,10 @@ public class CommentService {
         Comment comment = Comment.builder()
                 .member(member)
                 .card(card)
+                .content(commentRequestDto.getContent())
                 .build();
         commentRepository.save(comment);
-        return ResponseDto.success(requestDto);
+        return ResponseDto.success(commentRequestDto);
     }
 
     @Transactional
