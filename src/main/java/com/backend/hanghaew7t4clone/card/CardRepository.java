@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface CardRepository extends JpaRepository<Card, Long> {
   List<Card> findAllByMember(Member member);
-  List<Card> findAllByOrderbyCreatedAtDesc();
+  List<Card> findAllByOrderByCreatedAtDesc();
 }

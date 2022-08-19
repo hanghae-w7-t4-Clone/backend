@@ -9,10 +9,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins()
-                .exposedHeaders("Authorization")
+                .allowedOrigins("http://localhost:3000","http://13.209.87.238")
+                .allowedMethods("*")
+                .exposedHeaders("Authorization","Refresh-Token")
                 .allowCredentials(true)//make client read header("jwt-token")
         ;
-
     }
 }

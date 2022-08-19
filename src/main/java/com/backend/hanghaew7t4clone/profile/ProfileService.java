@@ -28,8 +28,8 @@ public class ProfileService {
               .id(member.getId())
               .nickname(member.getNickname())
               .name(member.getName())
-//                 .content(member.getContent)
-//                 .profilePhoto(member.getprofilePhoto)
+                 .content(member.getContent())
+                 .profilePhoto(member.getProfilePhoto())
               .cardCount(card.size())
               .build();
       return new ResponseEntity<>(Message.success(profileResponseDto), HttpStatus.OK);
