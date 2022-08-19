@@ -11,6 +11,7 @@ import java.util.Objects;
 
 
 @Entity
+@NoArgsConstructor
 @Getter
 public class Member extends Timestamped {
 
@@ -18,11 +19,10 @@ public class Member extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column
     private String email;
 
-
-    @Column(nullable = false)
+    @Column
     private String phoneNum;
 
     @Column(nullable = false)
@@ -34,6 +34,26 @@ public class Member extends Timestamped {
     @JsonIgnore
     private String password;
 
+    @Column(nullable = false)
+    private String content;
+
+
+
+    @Column(nullable = false)
+    private String profilephoro;
+
+
+    public Member(Long id, String email, String phoneNum, String name, String nickname, String password, String content, String profilephoro) {
+        this.id = id;
+        this.email = email;
+        this.phoneNum = phoneNum;
+        this.name = name;
+        this.nickname = nickname;
+        this.password = password;
+        this.content = content;
+        this.profilephoro = profilephoro;
+    }
+
     @Builder
     public Member(Long id, String email, String name, String nickname, String password, String phoneNum) {
         this.id = id;
@@ -42,6 +62,8 @@ public class Member extends Timestamped {
         this.name = name;
         this.nickname = nickname;
         this.password = password;
+        this.content = " ";
+        this.profilephoro =" ";
     }
 
     @Override

@@ -9,7 +9,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
@@ -28,37 +27,33 @@ public class MemberService {
         if (null != isPresentMember(requestDto.getNickname())) {
             return ResponseDto.fail("DUPLICATED_NICKNAME", "중복된 닉네임 입니다.");
         }
-
-        if (requestDto.getEmail()==null){
-            Member member = Member.builder()
-                .nickname(requestDto.getNickname())
-                .password(passwordEncoder.encode(requestDto.getPassword()))
-                .name(requestDto.getName())
-                .phoneNum(requestDto.getPhoneNum())
-                .build();
-
-            memberRepository.save(member);
-        }else {
-            Member member = Member.builder()
+        Member member;
+        if (requestDto.getLoginId().matches("\\d{10,11}")) {
+            member = Member.builder()
                     .nickname(requestDto.getNickname())
                     .password(passwordEncoder.encode(requestDto.getPassword()))
-                    .email(requestDto.getEmail())
+                    .name(requestDto.getName())
+                    .phoneNum(requestDto.getLoginId())
+                    .build();
+            memberRepository.save(member);
+        } else if (requestDto.getLoginId().matches("[a-zA-Z\\d]{3,15}@[a-zA-Z\\d]{3,15}[.][a-zA-Z]{2,5}")) {
+            member = Member.builder()
+                    .nickname(requestDto.getNickname())
+                    .password(passwordEncoder.encode(requestDto.getPassword()))
+                    .email(requestDto.getLoginId())
                     .name(requestDto.getName())
                     .build();
-
             memberRepository.save(member);
         }
-
         return ResponseDto.success("CreatMember Success");
     }
 
     @Transactional
     public ResponseDto<?> login(LoginRequestDto requestDto, HttpServletResponse response) {
-        Member member = isPresentMember(requestDto.getLoginId());
-        if (null == member) {
+        Member member = defineId(requestDto.getLoginId());
+        if (member == null) {
             return ResponseDto.fail("MEMBER_NOT_FOUND",
-                    "사용자를 찾을 수 없습니다.");
-        }
+                    "사용자를 찾을 수 없습니다.");}
 
         if (!member.validatePassword(passwordEncoder, requestDto.getPassword())) {
             return ResponseDto.fail("INVALID_MEMBER", "사용자를 찾을 수 없습니다.");
@@ -68,7 +63,22 @@ public class MemberService {
         tokenToHeaders(tokenDto, response);
 
         return ResponseDto.success("login success");
+
     }
+
+
+    @Transactional(readOnly = true)
+    public Member defineId(String loginId){
+        if (loginId.matches("\\d{10,11}")) {
+            return memberRepository.findByPhoneNum(loginId).orElse(null);
+        } else if (loginId.matches("[a-zA-Z\\d]{3,15}@[a-zA-Z\\d]{3,15}[.][a-zA-Z]{2,5}")) {
+            return memberRepository.findByEmail(loginId).orElse(null);
+        } else if(loginId.matches("[a-zA-Z\\d]{8,15}")) {
+            return memberRepository.findByNickname(loginId).orElse(null);
+        }
+        return null;
+    }
+
 
     @Transactional(readOnly = true)
     public Member isPresentMember(String nickname) {
