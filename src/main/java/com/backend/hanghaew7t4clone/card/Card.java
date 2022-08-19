@@ -1,5 +1,8 @@
 package com.backend.hanghaew7t4clone.card;
 
+import com.backend.hanghaew7t4clone.comment.Comment;
+import com.backend.hanghaew7t4clone.likes.CardLike;
+import com.backend.hanghaew7t4clone.likes.CommentLike;
 import com.backend.hanghaew7t4clone.member.Member;
 import com.backend.hanghaew7t4clone.shared.Timestamped;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -9,6 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Builder
@@ -47,15 +51,18 @@ public class Card extends Timestamped {
    @JsonIgnore
    private Member member;
 
-//   @Column
-//   @OneToMany(mappedBy = "Card",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-//   private List<Comment> commentListDto;
-//  @JsonIgnore
-//  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true) // 단방향
-//  // cascade = CascadeType.ALL , 현 Entity의 변경에 대해 관계를 맺은 Entity도 변경 전략을 결정합니다.
-//  // fetch = FetchType.LAZY, 관계된 Entity의 정보를 LAZY는 실제로 요청하는 순간 가져오는겁니다.
-//  // orphanRemoval = true, 관계 Entity에서 변경이 일어난 경우 DB 변경을 같이 할지 결정합니다.
-//  private List<Comment> comments;
+   @Column
+   @OneToMany(mappedBy = "Card",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+   private List<Comment> commentListDto;
+  @JsonIgnore
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true) // 단방향
+  // cascade = CascadeType.ALL , 현 Entity의 변경에 대해 관계를 맺은 Entity도 변경 전략을 결정합니다.
+  // fetch = FetchType.LAZY, 관계된 Entity의 정보를 LAZY는 실제로 요청하는 순간 가져오는겁니다.
+  // orphanRemoval = true, 관계 Entity에서 변경이 일어난 경우 DB 변경을 같이 할지 결정합니다.
+  private List<Comment> comments;
+
+   @OneToMany(fetch = FetchType.LAZY, mappedBy = "card", cascade = CascadeType.ALL)
+   private List<CardLike> cardLikes = new ArrayList<>();
 
    public void setMember(Member member) {
       this.member = member;
@@ -68,6 +75,10 @@ public class Card extends Timestamped {
 
    public void updateLikes(int likes) {
       this.likeCount = likes;
+   }
+
+   public void discountLike(CardLike cardLike) {
+      this.cardLikes.remove(cardLike);
    }
 
 }
