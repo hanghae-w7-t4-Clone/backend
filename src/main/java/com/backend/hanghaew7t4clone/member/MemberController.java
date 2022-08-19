@@ -15,17 +15,17 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @PostMapping("/user/signup")
+    @PostMapping("/users/signup")
     public ResponseDto<?> signup(@RequestBody MemberRequestDto requestDto){
         return memberService.creatMember(requestDto);
     }
 
-    @GetMapping("/user/login")
+    @PostMapping("/users/login")
     public ResponseDto<?> login(@RequestBody LoginRequestDto requestDto, HttpServletResponse response){
         return memberService.login(requestDto, response);
     }
 
-    @PostMapping("/user/nick-check")
+    @PostMapping("/users/nick-check")
     public ResponseDto<?> nickCheck(@RequestBody String loginId){
         return memberService.nickCheck(loginId);
     }

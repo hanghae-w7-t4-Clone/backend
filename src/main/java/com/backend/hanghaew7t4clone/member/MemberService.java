@@ -27,41 +27,35 @@ public class MemberService {
         if (null != isPresentMember(requestDto.getNickname())) {
             return ResponseDto.fail("DUPLICATED_NICKNAME", "중복된 닉네임 입니다.");
         }
-
         Member member;
-        if (requestDto.getEmail()==null){
+        if (requestDto.getLoginId().matches("\\d{10,11}")) {
             member = Member.builder()
                     .nickname(requestDto.getNickname())
                     .password(passwordEncoder.encode(requestDto.getPassword()))
                     .name(requestDto.getName())
-                    .phoneNum(requestDto.getPhoneNum())
+                    .phoneNum(requestDto.getLoginId())
                     .build();
-
-        }else {
+            memberRepository.save(member);
+        } else if (requestDto.getLoginId().matches("[a-zA-Z\\d]{3,15}@[a-zA-Z\\d]{3,15}[.][a-zA-Z]{2,5}")) {
             member = Member.builder()
                     .nickname(requestDto.getNickname())
                     .password(passwordEncoder.encode(requestDto.getPassword()))
-                    .email(requestDto.getEmail())
+                    .email(requestDto.getLoginId())
                     .name(requestDto.getName())
                     .build();
-
+            memberRepository.save(member);
         }
-        memberRepository.save(member);
-
         return ResponseDto.success("CreatMember Success");
     }
 
     @Transactional
     public ResponseDto<?> login(LoginRequestDto requestDto, HttpServletResponse response) {
+        Member member = defineId(requestDto.getLoginId());
+        if (member == null) {
+            return ResponseDto.fail("MEMBER_NOT_FOUND",
+                    "사용자를 찾을 수 없습니다.");}
 
-        if (defineId(requestDto.getLoginId()).isEmpty()) {
-
-        }else{
-        Member member = defineId(requestDto.getLoginId()).orElse();
-                return ResponseDto.fail("MEMBER_NOT_FOUND",
-                    "사용자를 찾을 수 없습니다.");)
-
-            if (!member.validatePassword(passwordEncoder, requestDto.getPassword())) {
+        if (!member.validatePassword(passwordEncoder, requestDto.getPassword())) {
             return ResponseDto.fail("INVALID_MEMBER", "사용자를 찾을 수 없습니다.");
         }
 
@@ -69,21 +63,22 @@ public class MemberService {
         tokenToHeaders(tokenDto, response);
 
         return ResponseDto.success("login success");
-        }
+
     }
 
 
     @Transactional(readOnly = true)
-    public Optional<Member> defineId(String loginId){
-        if (loginId.matches("\\d{3}-\\d{3,4}-\\d{4}")) {
-            return memberRepository.findByPhoneNum(loginId);
+    public Member defineId(String loginId){
+        if (loginId.matches("\\d{10,11}")) {
+            return memberRepository.findByPhoneNum(loginId).orElse(null);
         } else if (loginId.matches("[a-zA-Z\\d]{3,15}@[a-zA-Z\\d]{3,15}[.][a-zA-Z]{2,5}")) {
-            return memberRepository.findByEmail(loginId);
+            return memberRepository.findByEmail(loginId).orElse(null);
         } else if(loginId.matches("[a-zA-Z\\d]{8,15}")) {
-            return memberRepository.findByNickname(loginId);
+            return memberRepository.findByNickname(loginId).orElse(null);
         }
-        return Optional.empty();
+        return null;
     }
+
 
     @Transactional(readOnly = true)
     public Member isPresentMember(String nickname) {
