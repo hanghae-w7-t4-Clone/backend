@@ -1,26 +1,30 @@
 package com.backend.hanghaew7t4clone.member;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import lombok.Getter;
+import org.springframework.lang.Nullable;
 
+@Getter
 public class MemberRequestDto {
-    @NotBlank
-    @Size(min = 4, max = 12)
-    @Pattern(regexp = "[a-zA-Z\\d]*${3,12}")
     private String nickname;
 
-    @NotBlank
-    @Size(min = 4, max = 32)
-    @Pattern(regexp = "[a-zA-Z\\d]*${3,32}")
     private String password;
 
-    @NotBlank
-    private String passwordConfirm;
+    private String name;
 
-    @NotBlank
-    private String gender;
+    @Nullable
+    private String email;
 
-    @NotBlank
-    private String age;
+    @Nullable
+    private String phoneNum;
+
+    public MemberRequestDto(){};
+
+    public MemberRequestDto(String nickname, String password, String name, String email, String phoneNum){
+        this.nickname=nickname;
+        this.password=password;
+        this.name=name;
+        this.email=email;
+        this.phoneNum=phoneNum;
+
+    }
 }

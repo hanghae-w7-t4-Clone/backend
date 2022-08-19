@@ -9,11 +9,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import javax.persistence.*;
 import java.util.Objects;
 
-@Builder
+
 @Entity
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
 public class Member extends Timestamped {
 
     @Id
@@ -21,18 +19,30 @@ public class Member extends Timestamped {
     private Long id;
 
     @Column(nullable = false)
+    private String email;
+
+
+    @Column(nullable = false)
+    private String phoneNum;
+
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
     private String nickname;
-
-
-    @Column(nullable = false)
-    private String gender;
-
-    @Column(nullable = false)
-    private String age;
-
     @Column(nullable = false)
     @JsonIgnore
     private String password;
+
+    @Builder
+    public Member(Long id, String email, String name, String nickname, String password, String phoneNum) {
+        this.id = id;
+        this.email = email;
+        this.phoneNum =phoneNum;
+        this.name = name;
+        this.nickname = nickname;
+        this.password = password;
+    }
 
     @Override
     public boolean equals(Object o){
@@ -54,5 +64,6 @@ public class Member extends Timestamped {
     public boolean validatePassword(PasswordEncoder passwordEncoder, String password){
         return passwordEncoder.matches(password,this.password);
     }
+
 
 }
