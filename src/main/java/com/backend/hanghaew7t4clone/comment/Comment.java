@@ -30,10 +30,9 @@ public class Comment {
 //    private Card card;
 
     @Builder
-    public Comment(Long id, String content, Member member, Card card) {
-        this.id = id;
-        this.content = content;
+    public Comment(Member member, String content, Card card) {
         this.member = member;
+        this.content = content;
         this.card = card;
     }
 }

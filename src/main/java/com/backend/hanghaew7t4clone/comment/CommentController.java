@@ -4,6 +4,8 @@ import com.backend.hanghaew7t4clone.dto.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @RequiredArgsConstructor
 public class CommentController {
@@ -16,7 +18,7 @@ public class CommentController {
     }
 
     @PostMapping("/auth/cards/{cardId}/comments")
-    public ResponseDto<?> createComment(@RequestBody CommentRequestDto requestDto, @PathVariable cardId, ) {
+    public ResponseDto<?> createComment(@RequestBody CommentRequestDto requestDto, @PathVariable cardId, HttpServletRequest request) {
         return commentService.createComment(requestDto, cardId);
     }
 
