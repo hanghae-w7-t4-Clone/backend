@@ -12,9 +12,9 @@ public class LoginRequestDto {
     @NotBlank
     private String password;
 
-    public LoginRequestDto(){};
+    public LoginRequestDto(){}
     public LoginRequestDto(String loginId, String password){
         this.loginId = loginId;
         this.password =password;
-    };
+    }
 }
