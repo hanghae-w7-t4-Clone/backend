@@ -58,12 +58,12 @@ public class Member extends Timestamped {
     public Member(Long id, String email, String name, String nickname, String password, String phoneNum) {
         this.id = id;
         this.email = email;
-        this.phoneNum =phoneNum;
+        this.phoneNum = phoneNum;
         this.name = name;
         this.nickname = nickname;
         this.password = password;
-        this.content = " ";
-        this.profilePhoto =" ";
+        this.content = "  ";
+        this.profilePhoto = "https://springbucketss.s3.ap-northeast-2.amazonaws.com/entertain_21.jpg";
     }
 
     @Override

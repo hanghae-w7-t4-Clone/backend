@@ -66,8 +66,4 @@ public class Card extends Timestamped {
    }
 
 
-   public void updateLikes(int likes) {
-      this.likeCount = likes;
-   }
-
 }

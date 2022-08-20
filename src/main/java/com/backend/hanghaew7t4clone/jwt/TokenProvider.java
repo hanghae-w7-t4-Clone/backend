@@ -59,13 +59,6 @@ public class TokenProvider {
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
-//        AccessToken accessTokenObject = AccessToken.builder()
-//                .id(member.getId())
-//                .member(member)
-//                .value(refreshToken)
-//                .build();
-//        accessTokenRepository.save(accessTokenObject);
-
         RefreshToken refreshTokenObject = RefreshToken.builder()
                 .id(member.getId())
                 .member(member)
