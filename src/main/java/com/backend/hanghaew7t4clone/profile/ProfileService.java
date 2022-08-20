@@ -2,6 +2,8 @@ package com.backend.hanghaew7t4clone.profile;
 
 import com.backend.hanghaew7t4clone.card.Card;
 import com.backend.hanghaew7t4clone.card.CardRepository;
+import com.backend.hanghaew7t4clone.exception.CustomException;
+import com.backend.hanghaew7t4clone.exception.ErrorCode;
 import com.backend.hanghaew7t4clone.member.Member;
 import com.backend.hanghaew7t4clone.member.MemberRepository;
 import com.backend.hanghaew7t4clone.shared.Message;
@@ -55,7 +57,7 @@ public class ProfileService {
    private Member getMember(String nickname) {
       Member member=isPresentMember(nickname);
       if (member==null){
-         throw new MemberNotFoundException();
+         throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
       }
       ;
       return member;

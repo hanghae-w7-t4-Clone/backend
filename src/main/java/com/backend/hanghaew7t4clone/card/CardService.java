@@ -1,5 +1,6 @@
 package com.backend.hanghaew7t4clone.card;
 
+import com.backend.hanghaew7t4clone.comment.CommentRepository;
 import com.backend.hanghaew7t4clone.exception.CustomException;
 import com.backend.hanghaew7t4clone.jwt.TokenProvider;
 import com.backend.hanghaew7t4clone.member.Member;
@@ -19,7 +20,7 @@ public class CardService {
 
    private final CardRepository cardRepository;
    private final TokenProvider tokenProvider;
-//   private final CommentRepository commentRepository;
+   private final CommentRepository commentRepository;
 
 
    @Transactional
@@ -34,6 +35,7 @@ public class CardService {
               .likeCount(0)
               .content(requestDto.getContent())
               .commentCount(0)
+              .place(requestDto.getPlace())
               .member(member)
               .build();
       cardRepository.save(card);
@@ -94,13 +96,13 @@ public class CardService {
 
       Member member = validateMember(request);
       Card card = isPresentCard(id);
-      tokenCheck(request,member);
+      tokenCheck(request, member);
       cardCheck(member, card);
-//      List<Comment> commentList=commentRepository.findAllByCard(card);
-//      for (Comment comment : commentList) {
-//         commentRepository.delete(comment);
-//      }
-
+      //cascade 안먹을때는 아래 거로 쓰기
+      List<Comment> commentList = commentRepository.findAllByCard(card);
+      for (Comment comment : commentList) {
+         commentRepository.delete(comment);
+      }
       cardRepository.delete(card);
       return new ResponseEntity<>(Message.success("delete success"),HttpStatus.OK);
    }
@@ -109,8 +111,8 @@ public class CardService {
       if (null == card) {
          throw new CustomException();
       }
-      if (card.getMember().getId()!= member.getId()) {
-         throw new NotAuthorException();
+      if (!card.getMember().getId().equals(member.getId())) {
+         throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
       }
    }
 

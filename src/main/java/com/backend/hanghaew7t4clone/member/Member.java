@@ -4,7 +4,9 @@ import com.backend.hanghaew7t4clone.card.Card;
 import com.backend.hanghaew7t4clone.comment.Comment;
 import com.backend.hanghaew7t4clone.shared.Timestamped;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.Hibernate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -12,7 +14,6 @@ import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-
 
 @Entity
 @AllArgsConstructor
@@ -65,26 +66,21 @@ public class Member extends Timestamped {
         this.profilePhoto =" ";
     }
 
-    @Override
-    public boolean equals(Object o){
-        if(this == o){
-            return true;
-        }
-        if(o == null || Hibernate.getClass(this)!= Hibernate.getClass(o)){
-            return false;
-        }
-        Member member = (Member) o;
-        return id != null && Objects.equals(id,member.id);
-    }
-
-    @Override
-    public int hashCode(){
-        return getClass().hashCode();
-    }
 
     public boolean validatePassword(PasswordEncoder passwordEncoder, String password){
         return passwordEncoder.matches(password,this.password);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Member member = (Member) o;
+        return id != null && Objects.equals(id, member.id);
+    }
 
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }
