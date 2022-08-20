@@ -43,17 +43,28 @@ public class Member extends Timestamped {
     @Column(nullable = false)
     private String content;
 
+
     @OneToMany(fetch = FetchType.LAZY)
     private List<Card> cardList;
 
     @OneToMany(fetch = FetchType.LAZY)
     private List<Comment> commentList;
 
+
+
     @Column(nullable = false)
     private String profilePhoto;
 
-
-
+    public Member(String email, String phoneNum, String name, String nickname, String password, String content, String profilePhoto) {
+        this.id = getId();
+        this.email = email;
+        this.phoneNum = phoneNum;
+        this.name = name;
+        this.nickname = nickname;
+        this.password = password;
+        this.content = content;
+        this.profilePhoto = profilePhoto;
+    }
 
     @Builder
     public Member(String email, String name, String nickname, String password, String phoneNum) {
@@ -66,7 +77,6 @@ public class Member extends Timestamped {
         this.content = " ";
         this.profilePhoto ="https://springbucketss.s3.ap-northeast-2.amazonaws.com/basicprofile.png";
     }
-
 
     public boolean validatePassword(PasswordEncoder passwordEncoder, String password){
         return passwordEncoder.matches(password,this.password);
