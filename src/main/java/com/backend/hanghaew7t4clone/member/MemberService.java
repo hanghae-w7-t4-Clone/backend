@@ -71,15 +71,14 @@ public class MemberService {
 
 
     @Transactional(readOnly = true)
-    public Member defineId(String loginId){
+    public Member defineId(String loginId) {
         if (loginId.matches("\\d{10,11}")) {
             return memberRepository.findByPhoneNum(loginId).orElse(null);
         } else if (loginId.matches("[a-zA-Z\\d]{3,15}@[a-zA-Z\\d]{3,15}[.][a-zA-Z]{2,5}")) {
             return memberRepository.findByEmail(loginId).orElse(null);
-        } else if(loginId.matches("[a-zA-Z\\d]{8,15}")) {
+        } else {
             return memberRepository.findByNickname(loginId).orElse(null);
         }
-        return null;
     }
 
 

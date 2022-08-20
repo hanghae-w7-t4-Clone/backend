@@ -40,6 +40,7 @@ public class CardService {
               .likeCount(0)
               .content(requestDto.getContent())
               .commentCount(0)
+              .place(requestDto.getPlace())
               .member(member)
               .build();
       cardRepository.save(card);
