@@ -1,4 +1,4 @@
-package com.backend.hanghaew7t4clone.member.jwt;
+package com.backend.hanghaew7t4clone.jwt;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

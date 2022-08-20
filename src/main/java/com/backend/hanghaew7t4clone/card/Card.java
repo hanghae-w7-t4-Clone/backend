@@ -53,7 +53,16 @@ public class Card extends Timestamped {
 
    @OneToMany(fetch = FetchType.LAZY, mappedBy = "card", cascade = CascadeType.ALL)
    private Set<Likes> likes = new HashSet<>();
-
+   @Builder
+   public Card(String nickname, List<String> imgUrlList,int likeCount, String content,int commentCount,String place, Member member) {
+      this.nickname=nickname;
+      this.imgUrlList=imgUrlList;
+      this.likeCount=likeCount;
+      this.content=content;
+      this.commentCount=commentCount;
+      this.place=place;
+      this.member=member;
+   }
    public void setMember(Member member) {
       this.member = member;
    }
