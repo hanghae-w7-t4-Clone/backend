@@ -36,6 +36,7 @@ public class MemberService {
                     .phoneNum(requestDto.getLoginId())
                     .build();
             memberRepository.save(member);
+            return ResponseDto.success("CreatMember Success");
         } else if (requestDto.getLoginId().matches("[a-zA-Z\\d]{3,15}@[a-zA-Z\\d]{3,15}[.][a-zA-Z]{2,5}")) {
             member = Member.builder()
                     .nickname(requestDto.getNickname())
@@ -44,8 +45,9 @@ public class MemberService {
                     .name(requestDto.getName())
                     .build();
             memberRepository.save(member);
+            return ResponseDto.success("CreatMember Success");
         }
-        return ResponseDto.success("CreatMember Success");
+        return ResponseDto.fail("BAD_REQUEST","로그인 아이디가 올바르지 않습니다");
     }
 
     @Transactional
@@ -58,12 +60,11 @@ public class MemberService {
         if (!member.validatePassword(passwordEncoder, requestDto.getPassword())) {
             return ResponseDto.fail("INVALID_MEMBER", "사용자를 찾을 수 없습니다.");
         }
+        String nickname =member.getNickname();
 
         TokenDto tokenDto = tokenProvider.generateTokenDto(member);
         tokenToHeaders(tokenDto, response);
-
-        return ResponseDto.success("login success");
-
+        return ResponseDto.success(nickname);
     }
 
 
