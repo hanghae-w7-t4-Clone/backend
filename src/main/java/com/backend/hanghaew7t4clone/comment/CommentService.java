@@ -4,7 +4,7 @@ import com.backend.hanghaew7t4clone.card.Card;
 import com.backend.hanghaew7t4clone.card.CardRepository;
 import com.backend.hanghaew7t4clone.card.CardService;
 import com.backend.hanghaew7t4clone.dto.ResponseDto;
-import com.backend.hanghaew7t4clone.jwt.TokenProvider;
+import com.backend.hanghaew7t4clone.member.jwt.TokenProvider;
 import com.backend.hanghaew7t4clone.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,7 @@ public class CommentService {
     private final TokenProvider tokenProvider;
 
     @Transactional
-    public ResponseDto<?> getComment(Long cardId) {
+    public ResponseDto<?> getAllComment(Long cardId) {
         Optional<Card> card = cardRepository.findById(cardId);
         if (card.isEmpty()) {
             return ResponseDto.fail("NOT_FOUND", "해당 게시글이 존재하지 않습니다.");

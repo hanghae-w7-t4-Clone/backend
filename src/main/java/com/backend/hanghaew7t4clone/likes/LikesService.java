@@ -6,7 +6,7 @@ import com.backend.hanghaew7t4clone.card.CardRepository;
 import com.backend.hanghaew7t4clone.comment.Comment;
 import com.backend.hanghaew7t4clone.comment.CommentRepository;
 import com.backend.hanghaew7t4clone.dto.ResponseDto;
-import com.backend.hanghaew7t4clone.jwt.TokenProvider;
+import com.backend.hanghaew7t4clone.member.jwt.TokenProvider;
 import com.backend.hanghaew7t4clone.member.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
