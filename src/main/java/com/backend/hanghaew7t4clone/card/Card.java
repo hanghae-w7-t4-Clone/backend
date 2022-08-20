@@ -2,7 +2,6 @@ package com.backend.hanghaew7t4clone.card;
 
 import com.backend.hanghaew7t4clone.comment.Comment;
 import com.backend.hanghaew7t4clone.likes.CardLike;
-import com.backend.hanghaew7t4clone.likes.CommentLike;
 import com.backend.hanghaew7t4clone.member.Member;
 import com.backend.hanghaew7t4clone.shared.Timestamped;
 import com.fasterxml.jackson.annotation.JsonIgnore;

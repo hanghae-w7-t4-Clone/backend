@@ -11,22 +11,22 @@ import javax.servlet.http.HttpServletRequest;
 
 @RequiredArgsConstructor
 @RestController
-public class LikeController {
-    private final LikeService likeService;
+public class LikesController {
+    private final LikesService likesService;
 
     @PostMapping("/auth/likes/cards/{id}")
-    public ResponseDto<?> CardLike(@PathVariable Long id, HttpServletRequest request) {
-        return likeService.pushCardLike(id, request);
+    public ResponseDto<?> CardLikes(@PathVariable Long id, HttpServletRequest request) {
+        return LikesService.pushCardLikes(id, request);
     }
 
     @PostMapping("/auth/likes/cards/comments/{id}")
-    public ResponseDto<?> CommentLike(@PathVariable Long id, HttpServletRequest request) {
-        return likeService.pushCommentLike(id, request);
+    public ResponseDto<?> CommentLikes(@PathVariable Long id, HttpServletRequest request) {
+        return LikesService.pushCommentLikes(id, request);
     }
 
-//    @PostMapping("auth/re-comments/{id}/like")
-//    public ResponseDto<?> pushReCommentLike(@PathVariable Long id, HttpServletRequest request) {
-//        return likeService.pushReCommentLike(id, request);
+//    @PostMapping("auth/re-comments/{id}/Likes")
+//    public ResponseDto<?> pushReCommentLikes(@PathVariable Long id, HttpServletRequest request) {
+//        return LikesService.pushReCommentLikes(id, request);
 //    }
 
 }

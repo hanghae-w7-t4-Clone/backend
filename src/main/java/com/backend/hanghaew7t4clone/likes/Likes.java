@@ -1,4 +1,4 @@
-package com.backend.hanghaew7t4clone.Likess;
+package com.backend.hanghaew7t4clone.likes;
 
 
 import com.backend.hanghaew7t4clone.card.Card;

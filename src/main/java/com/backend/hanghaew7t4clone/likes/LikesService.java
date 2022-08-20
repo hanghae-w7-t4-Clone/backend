@@ -24,18 +24,17 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class LikeService {
+public class LikesService {
 
-private final CardLikeRepository cardLikeRepository;
+private final LikesRepository LikesRepository;
 private final TokenProvider tokenProvider;
 private final CardService cardService;
 private final CardRepository cardRepository;
-private final CommentLikeRepository commentLikeRepository;
 private final CommentRepository commentRepository;
 
 
     @Transactional
-    public ResponseDto<?> pushCardLike(Long cardId, HttpServletRequest request) {
+    public ResponseDto<?> pushCardLikes(Long cardId, HttpServletRequest request) {
 
         if (null == request.getHeader("Authorization")) {
             return ResponseDto.fail("MEMBER_NOT_FOUND",
@@ -52,21 +51,21 @@ private final CommentRepository commentRepository;
        if (card==null){ return ResponseDto.fail("CARD_NOT_FOUND", "게시글이 존재하지 않습니다.");
        }
 
-        Optional<CardLike> ByCardAndMember = cardLikeRepository.findByCardAndMember(card, member);
+        Optional<CardLikes> ByCardAndMember = cardLikesRepository.findByCardAndMember(card, member);
 
         ByCardAndMember.ifPresentOrElse(
                 // 좋아요 있을경우 삭제
-                cardLike -> {
-                    cardLikeRepository.delete(cardLike);
-                    card.discountLike(cardLike);
+                cardLikes -> {
+                    cardLikesRepository.delete(cardLikes);
+                    card.discountLikes(cardLikes);
                 },
                 // 좋아요가 없을 경우 좋아요 추가
                 () -> {
-                    CardLike cardLike = CardLike.builder()
+                    CardLikes cardLikes = CardLikes.builder()
                             .card(card)
                             .member(member)
                             .build();
-                    cardLikeRepository.save(cardLike);
+                    cardLikesRepository.save(cardLikes);
                 });
         return ResponseDto.success(true);
     }
@@ -87,22 +86,22 @@ private final CommentRepository commentRepository;
 
 
     @Transactional
-    public List<CardResponseDto> getAllCardLikesByMember(Member member){
-       List<CardLike> cardLikeList = cardLikeRepository.findCardLikesByMember(member);
+    public List<CardResponseDto> getAlLikesByMember(Member member){
+       List<com.backend.hanghaew7t4clone.Likess.Likes> LikesList = LikesRepository.findLikesByMember(member);
        List<CardResponseDto> cardResponseDtoList = new ArrayList<>();
         List<String> url = ;
-        for(CardLike cardLike : cardLikeList) {
-            List<CardLike> cardLikeListByCard = cardLikeRepository.findAllByCard(cardLike.getCard());
-            int likeCount= cardLikeListByCard.size();
+        for(Likess Likess : LikesList) {
+            List<com.backend.hanghaew7t4clone.Likess.Likes> cardLikesListByCard = cardLikesRepository.findAllByCard(cardLikes.getCard());
+            int LikesCount= cardLikesListByCard.size();
             cardResponseDtoList.add(
                     CardResponseDto.builder()
-                            .nickname(cardLike.getCard().getMember().getNickname())
-                            .modifiedAt(cardLike.getCard().getModifiedAt())
-                            .createdAt(cardLike.getCard().getCreatedAt())
-                            .content(cardLike.getCard().getContent())
-                            .id(cardLike.getCard().getId())
+                            .nickname(cardLikes.getCard().getMember().getNickname())
+                            .modifiedAt(cardLikes.getCard().getModifiedAt())
+                            .createdAt(cardLikes.getCard().getCreatedAt())
+                            .content(cardLikes.getCard().getContent())
+                            .id(cardLikes.getCard().getId())
                             .imgUrlList(urlList)
-                            .likeCount(likeCount)
+                            .LikesCount(LikesCount)
                             .build()
             );
         }
@@ -111,7 +110,7 @@ private final CommentRepository commentRepository;
 
 
     @Transactional
-    public ResponseDto<?>pushCommentLike (Long id, HttpServletRequest request) {
+    public ResponseDto<?>pushCommentLikes (Long id, HttpServletRequest request) {
 
         if (null == request.getHeader("Authorization")) {
             return ResponseDto.fail("MEMBER_NOT_FOUND",
@@ -129,19 +128,19 @@ private final CommentRepository commentRepository;
         }
 
 
-        Optional<CommentLike> ByCommentAndMember = commentLikeRepository.findByCommentAndMember(comment, member);
+        Optional<CommentLikes> ByCommentAndMember = LikesRepository.findByCommentAndMember(comment, member);
         ByCommentAndMember.ifPresentOrElse(
-                commentLike -> {
-                    commentLikeRepository.delete(commentLike);
-                    comment.discountLike(commentLike);
+                commentLikes -> {
+                    commentLikesRepository.delete(commentLikes);
+                    comment.discountLikes(commentLikes);
                 },
                 () ->{
-                    CommentLike commentLike = CommentLike.builder()
+                    CommentLikes commentLikes = CommentLikes.builder()
                             .comment(comment)
                             .member(member)
                             .build();
 
-                    commentLikeRepository.save(commentLike);
+                    commentLikesRepository.save(commentLikes);
                 }
         );
         return ResponseDto.success(true);
@@ -154,24 +153,24 @@ private final CommentRepository commentRepository;
 
 
     @Transactional
-    public List<CommentResponseDto> getAllCommentLikesByMember(Member member){
-        List<CommentLike> commentLikeList = commentLikeRepository.findCommentLikesByMember(member);
+    public List<CommentResponseDto> getAllCommentLikessByMember(Member member){
+        List<CommentLikes> commentLikesList = commentLikesRepository.findCommentLikessByMember(member);
         List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
-        for(CommentLike commentLike : commentLikeList) {
-            List<CommentLike> commentLikeListByCard = commentLikeRepository.findByComment(commentLike.getComment());
-            int likeCount= commentLikeListByCard.size();
+        for(CommentLikes commentLikes : commentLikesList) {
+            List<CommentLikes> commentLikesListByCard = commentLikesRepository.findByComment(commentLikes.getComment());
+            int LikesCount= commentLikesListByCard.size();
             commentResponseDtoList.add(
                     CommentResponseDto.builder()
-                            .nickname(commentLike.getComment().getMember().getNickname())
-                            .content(commentLike.getComment().getContent())
-                            .id(commentLike.getComment().getId())
+                            .nickname(commentLikes.getComment().getMember().getNickname())
+                            .content(commentLikes.getComment().getContent())
+                            .id(commentLikes.getComment().getId())
                             .build()
             );
         }
         return commentResponseDtoList;
     }
 
-//    public ResponseDto<?>pushReCommentLike (Long id, HttpServletRequest request){
+//    public ResponseDto<?>pushReCommentLikes (Long id, HttpServletRequest request){
 //        log.info("1");
 //        if (null == request.getHeader("Refresh-Token")) {
 //            return ResponseDto.fail("MEMBER_NOT_FOUND",
@@ -193,20 +192,20 @@ private final CommentRepository commentRepository;
 //            return ResponseDto.fail("RE_COMMENT_NOT_FOUND",
 //                    "댓글이 존재하지 않습니다.");}
 //
-//        Optional<ReCommentLike> ByReCommentAndMember = reCommentLikeRepository.findByReCommentAndMember(reComment, member);
+//        Optional<ReCommentLikes> ByReCommentAndMember = reCommentLikesRepository.findByReCommentAndMember(reComment, member);
 //        ByReCommentAndMember.ifPresentOrElse(
-//                reCommentLike -> {
-//                    reCommentLikeRepository.delete(reCommentLike);
-//                    reComment.discountLike(reCommentLike);
+//                reCommentLikes -> {
+//                    reCommentLikesRepository.delete(reCommentLikes);
+//                    reComment.discountLikes(reCommentLikes);
 //                    log.info("3");
 //                },
 //
 //                () ->{
-//                    ReCommentLike reCommentLike = ReCommentLike.builder()
+//                    ReCommentLikes reCommentLikes = ReCommentLikes.builder()
 //                            .member(member)
 //                            .reComment(reComment)
 //                            .build();
-//                    reCommentLikeRepository.save(reCommentLike);
+//                    reCommentLikesRepository.save(reCommentLikes);
 //                    log.info("4");
 //                }
 //        );
@@ -214,20 +213,20 @@ private final CommentRepository commentRepository;
 //    }
 //
 //    @Transactional
-//    public List<ReCommentAllResponseDto> getAllRecommentLikesByMember(Member member){
-//        List<ReCommentLike> reCommentLikeList = reCommentLikeRepository.findReCommentLikesByMember(member);
+//    public List<ReCommentAllResponseDto> getAllRecommentLikessByMember(Member member){
+//        List<ReCommentLikes> reCommentLikesList = reCommentLikesRepository.findReCommentLikessByMember(member);
 //        List<ReCommentAllResponseDto> reCommentAllResponseDtoList = new ArrayList<>();
-//        for(ReCommentLike reCommentLike : reCommentLikeList) {
-//            List<ReCommentLike> cardLikeListByCard = reCommentLikeRepository.findByReComment(reCommentLike.getReComment());
-//            int likeCount= cardLikeListByCard.size();
+//        for(ReCommentLikes reCommentLikes : reCommentLikesList) {
+//            List<ReCommentLikes> cardLikesListByCard = reCommentLikesRepository.findByReComment(reCommentLikes.getReComment());
+//            int LikesCount= cardLikesListByCard.size();
 //            reCommentAllResponseDtoList.add(
 //                    ReCommentAllResponseDto.builder()
-//                            .author(reCommentLike.getReComment().getMember().getNickname())
-//                            .modifiedAt(reCommentLike.getReComment().getModifiedAt())
-//                            .createdAt(reCommentLike.getReComment().getCreatedAt())
-//                            .reContent(reCommentLike.getReComment().getReContent())
-//                            .id(reCommentLike.getReComment().getId())
-//                            .reLikeCount(likeCount)
+//                            .author(reCommentLikes.getReComment().getMember().getNickname())
+//                            .modifiedAt(reCommentLikes.getReComment().getModifiedAt())
+//                            .createdAt(reCommentLikes.getReComment().getCreatedAt())
+//                            .reContent(reCommentLikes.getReComment().getReContent())
+//                            .id(reCommentLikes.getReComment().getId())
+//                            .reLikesCount(LikesCount)
 //                            .build()
 //            );
 //        }

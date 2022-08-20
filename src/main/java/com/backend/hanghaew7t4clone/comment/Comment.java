@@ -2,7 +2,6 @@ package com.backend.hanghaew7t4clone.comment;
 
 import com.backend.hanghaew7t4clone.card.Card;
 import com.backend.hanghaew7t4clone.likes.CardLike;
-import com.backend.hanghaew7t4clone.likes.CommentLike;
 import com.backend.hanghaew7t4clone.member.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
