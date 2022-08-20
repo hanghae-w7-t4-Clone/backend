@@ -33,13 +33,21 @@ public class Comment {
     private Card card;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ReComment> reComment = new HashSet<>();
+    private Set<ReComment> reCommentList;
 
-    @Builder
     public Comment(String content, Member member, Card card) {
         this.content = content;
         this.member = member;
         this.card = card;
+    }
+
+    public CommentResponseDto getAllCommentDto() {
+        return CommentResponseDto.builder()
+                .id(this.id)
+                .profilePhoto(this.getMember().getProfilePhoto())
+                .content(this.content)
+                .nickname(this.getMember().getNickname())
+                .build();
     }
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "comment", cascade = CascadeType.ALL)
