@@ -1,7 +1,7 @@
 package com.backend.hanghaew7t4clone.card;
 
 import com.backend.hanghaew7t4clone.comment.Comment;
-import com.backend.hanghaew7t4clone.likes.CardLike;
+import com.backend.hanghaew7t4clone.likes.Likes;
 import com.backend.hanghaew7t4clone.member.Member;
 import com.backend.hanghaew7t4clone.shared.Timestamped;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -12,7 +12,9 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Builder
 @Getter
@@ -50,9 +52,10 @@ public class Card extends Timestamped {
    @JsonIgnore
    private Member member;
 
-   @Column
-   @OneToMany(mappedBy = "Card",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-   private List<Comment> commentListDto;
+//   @Column
+//   @OneToMany(mappedBy = "Card",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+//   private List<Comment> commentListDto;
+
   @JsonIgnore
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true) // 단방향
   // cascade = CascadeType.ALL , 현 Entity의 변경에 대해 관계를 맺은 Entity도 변경 전략을 결정합니다.
@@ -61,7 +64,7 @@ public class Card extends Timestamped {
   private List<Comment> comments;
 
    @OneToMany(fetch = FetchType.LAZY, mappedBy = "card", cascade = CascadeType.ALL)
-   private List<CardLike> cardLikes = new ArrayList<>();
+   private Set<Likes> likes = new HashSet<>();
 
    public void setMember(Member member) {
       this.member = member;
@@ -72,12 +75,8 @@ public class Card extends Timestamped {
    }
 
 
-   public void updateLikes(int likes) {
-      this.likeCount = likes;
-   }
-
-   public void discountLike(CardLike cardLike) {
-      this.cardLikes.remove(cardLike);
+   public void discountLikes(Likes likes) {
+      this.likes.remove(likes);
    }
 
 }

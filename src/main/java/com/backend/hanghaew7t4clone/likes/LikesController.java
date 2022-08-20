@@ -16,12 +16,12 @@ public class LikesController {
 
     @PostMapping("/auth/likes/cards/{id}")
     public ResponseDto<?> CardLikes(@PathVariable Long id, HttpServletRequest request) {
-        return LikesService.pushCardLikes(id, request);
+        return likesService.pushCardLikes(id, request);
     }
 
     @PostMapping("/auth/likes/cards/comments/{id}")
     public ResponseDto<?> CommentLikes(@PathVariable Long id, HttpServletRequest request) {
-        return LikesService.pushCommentLikes(id, request);
+        return likesService.pushCommentLikes(id, request);
     }
 
 //    @PostMapping("auth/re-comments/{id}/Likes")

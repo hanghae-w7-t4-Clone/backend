@@ -35,11 +35,6 @@ public class Likes {
     @JoinColumn(name = "comment_id")
     private Comment comment;
 
-//    @ManyToOne(fetch = LAZY)
-//    @JoinColumn(name = "sub_comment_id")
-//    private SubComment subComment;
-
-
 
     @Builder
     public Likes (Member member, Card card){
