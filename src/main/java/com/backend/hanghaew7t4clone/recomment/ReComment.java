@@ -34,6 +34,15 @@ public class ReComment {
         this.member = member;
         this.comment = comment;
     }
+    
+    public ReCommentResponseDto getAllReCommentDto() {
+        return ReCommentResponseDto.builder()
+                .id(this.id)
+                .profilePhoto(this.getMember().getProfilePhoto())
+                .nickname(this.getMember().getNickname())
+                .content(this.content)
+                .build();
+    }
 
     public boolean validateMember(Member member) {
         return !this.member.equals(member);

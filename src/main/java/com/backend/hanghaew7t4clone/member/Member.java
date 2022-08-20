@@ -38,11 +38,8 @@ public class Member extends Timestamped {
     @Column(nullable = false)
     private String content;
 
-
-
     @Column(nullable = false)
     private String profilePhoto;
-
 
     public Member(String email, String phoneNum, String name, String nickname, String password, String content, String profilePhoto) {
         this.id = getId();
@@ -66,7 +63,6 @@ public class Member extends Timestamped {
         this.content = " ";
         this.profilePhoto =" ";
     }
-
 
     public boolean validatePassword(PasswordEncoder passwordEncoder, String password){
         return passwordEncoder.matches(password,this.password);
