@@ -2,6 +2,8 @@ package com.backend.hanghaew7t4clone.member;
 
 
 import com.backend.hanghaew7t4clone.dto.ResponseDto;
+import com.backend.hanghaew7t4clone.jwt.RefreshToken;
+import com.backend.hanghaew7t4clone.jwt.RefreshTokenRepository;
 import com.backend.hanghaew7t4clone.jwt.TokenDto;
 import com.backend.hanghaew7t4clone.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +11,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -21,6 +25,8 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     private final TokenProvider tokenProvider;
+
+    private final RefreshTokenRepository refreshTokenRepository;
 
     @Transactional
     public ResponseDto<?> creatMember(MemberRequestDto requestDto) {
@@ -71,14 +77,15 @@ public class MemberService {
 
 
     @Transactional(readOnly = true)
-    public Member defineId(String loginId) {
+    public Member defineId(String loginId){
         if (loginId.matches("\\d{10,11}")) {
             return memberRepository.findByPhoneNum(loginId).orElse(null);
         } else if (loginId.matches("[a-zA-Z\\d]{3,15}@[a-zA-Z\\d]{3,15}[.][a-zA-Z]{2,5}")) {
             return memberRepository.findByEmail(loginId).orElse(null);
-        } else {
+        } else if(loginId.matches("[a-zA-Z\\d]{8,15}")) {
             return memberRepository.findByNickname(loginId).orElse(null);
         }
+        return null;
     }
 
 
@@ -103,4 +110,29 @@ public class MemberService {
     }
 
 
+    public ResponseDto<?> refreshToken(String nickname,HttpServletRequest request, HttpServletResponse response) {
+        if (null == request.getHeader("Refresh-Token")) {
+            return ResponseDto.fail("REFRESH_TOKEN_NOT_FOUND",
+                    "로그인 시간이 만료되었습니다.");
+        }
+        Member requestingMember = memberRepository.findByNickname(nickname).orElse(null);
+        if (requestingMember == null) {
+            return ResponseDto.fail("MEMBER_NOT_FOUND", "로그인 정보가 맞지 않습니다.");
+        }
+        RefreshToken refreshTokenConfirm = refreshTokenRepository.findByMember(requestingMember).orElse(null);
+            if (Objects.equals(refreshTokenConfirm != null ? refreshTokenConfirm.getValue() : null, request.getHeader("Refresh-Token"))) {
+                TokenDto tokenDto = tokenProvider.generateTokenDto(requestingMember);
+                accessTokenToHeaders(tokenDto, response);
+                return ResponseDto.success("ACCESS_TOKEN_REISSUE");
+            } else {
+                return ResponseDto.fail("REFRESH_TOKEN_NOT_FOUND", "로그인 정보가 맞지 않습니다.");
+            }
+        }
+    
+
+
+    public void accessTokenToHeaders(TokenDto tokenDto, HttpServletResponse response) {
+        response.addHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
+        response.addHeader("Access-Token-Expire-Time", tokenDto.getAccessTokenExpiresIn().toString());
+    }
 }
