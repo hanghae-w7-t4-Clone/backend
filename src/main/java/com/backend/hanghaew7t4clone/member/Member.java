@@ -1,5 +1,7 @@
 package com.backend.hanghaew7t4clone.member;
 
+import com.backend.hanghaew7t4clone.card.Card;
+import com.backend.hanghaew7t4clone.comment.Comment;
 import com.backend.hanghaew7t4clone.shared.Timestamped;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
@@ -7,10 +9,13 @@ import org.hibernate.Hibernate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 
 @Entity
+@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 public class Member extends Timestamped {
@@ -37,22 +42,16 @@ public class Member extends Timestamped {
     @Column(nullable = false)
     private String content;
 
-
-
     @Column(nullable = false)
     private String profilePhoto;
 
+    @OneToMany(fetch = FetchType.LAZY)
+    private Set<Card> cards;
 
-    public Member(String email, String phoneNum, String name, String nickname, String password, String content, String profilePhoto) {
-        this.id = getId();
-        this.email = email;
-        this.phoneNum = phoneNum;
-        this.name = name;
-        this.nickname = nickname;
-        this.password = password;
-        this.content = content;
-        this.profilePhoto = profilePhoto;
-    }
+    @OneToMany
+    private Set<Comment> comments;
+
+
 
     @Builder
     public Member(String email, String name, String nickname, String password, String phoneNum) {
