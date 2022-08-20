@@ -2,7 +2,6 @@ package com.backend.hanghaew7t4clone.profile;
 
 import com.backend.hanghaew7t4clone.card.Card;
 import com.backend.hanghaew7t4clone.card.CardRepository;
-import com.backend.hanghaew7t4clone.exception.MemberNotFoundException;
 import com.backend.hanghaew7t4clone.member.Member;
 import com.backend.hanghaew7t4clone.member.MemberRepository;
 import com.backend.hanghaew7t4clone.shared.Message;

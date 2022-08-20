@@ -1,9 +1,6 @@
 package com.backend.hanghaew7t4clone.card;
 
-import com.backend.hanghaew7t4clone.exception.CardNotFoundException;
-import com.backend.hanghaew7t4clone.exception.InvalidAccessTokenException;
-import com.backend.hanghaew7t4clone.exception.InvalidTokenException;
-import com.backend.hanghaew7t4clone.exception.NotAuthorException;
+import com.backend.hanghaew7t4clone.exception.CustomException;
 import com.backend.hanghaew7t4clone.jwt.TokenProvider;
 import com.backend.hanghaew7t4clone.member.Member;
 import com.backend.hanghaew7t4clone.shared.Message;
@@ -59,7 +56,7 @@ public class CardService {
    public ResponseEntity<?> getCard(Long id) {
       Card card = isPresentCard(id);
       if (null == card) {
-         throw new CardNotFoundException();
+         throw new CustomException();
       }
 
       return new ResponseEntity<>(Message.success(
@@ -110,7 +107,7 @@ public class CardService {
 
    private void cardCheck(Member member, Card card) {
       if (null == card) {
-         throw new CardNotFoundException();
+         throw new CustomException();
       }
       if (card.getMember().getId()!= member.getId()) {
          throw new NotAuthorException();
