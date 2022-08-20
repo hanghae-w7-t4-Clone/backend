@@ -5,10 +5,7 @@ import com.backend.hanghaew7t4clone.likes.Likes;
 import com.backend.hanghaew7t4clone.member.Member;
 import com.backend.hanghaew7t4clone.shared.Timestamped;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -16,11 +13,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Builder
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Card extends Timestamped {
 
    @Column
@@ -58,13 +53,24 @@ public class Card extends Timestamped {
 
    @OneToMany(fetch = FetchType.LAZY, mappedBy = "card", cascade = CascadeType.ALL)
    private Set<Likes> likes = new HashSet<>();
-
+   @Builder
+   public Card(String nickname, List<String> imgUrlList,int likeCount, String content,int commentCount,String place, Member member) {
+      this.nickname=nickname;
+      this.imgUrlList=imgUrlList;
+      this.likeCount=likeCount;
+      this.content=content;
+      this.commentCount=commentCount;
+      this.place=place;
+      this.member=member;
+   }
    public void setMember(Member member) {
       this.member = member;
    }
 
    public void update(CardRequestDto postRequestDto) {
       this.content = postRequestDto.getContent();
+      this.imgUrlList=postRequestDto.getImgUrlList();
+      this.place= postRequestDto.getPlace();
    }
 
 

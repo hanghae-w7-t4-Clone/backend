@@ -28,7 +28,7 @@ public class CommentService {
     private final TokenProvider tokenProvider;
 
     @Transactional
-    public ResponseDto<?> getComment(Long cardId) {
+    public ResponseDto<?> getAllComment(Long cardId) {
         Optional<Card> card = cardRepository.findById(cardId);
         if (card.isEmpty()) {
             return ResponseDto.fail("NOT_FOUND", "해당 게시글이 존재하지 않습니다.");

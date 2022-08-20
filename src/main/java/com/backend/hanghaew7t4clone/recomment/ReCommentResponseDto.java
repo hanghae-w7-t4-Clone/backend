@@ -1,4 +1,4 @@
-package com.backend.hanghaew7t4clone.comment;
+package com.backend.hanghaew7t4clone.recomment;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -6,14 +6,14 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class CommentResponseDto {
+public class ReCommentResponseDto {
     private Long id;
     private String profilePhoto;
     private String nickname;
     private String content;
 
     @Builder
-    public CommentResponseDto(Long id, String profilePhoto, String nickname, String content) {
+    public ReCommentResponseDto(Long id, String profilePhoto, String nickname, String content) {
         this.id = id;
         this.profilePhoto = profilePhoto;
         this.nickname = nickname;
