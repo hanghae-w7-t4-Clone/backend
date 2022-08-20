@@ -1,12 +1,7 @@
 package com.backend.hanghaew7t4clone.card;
 
-import com.backend.hanghaew7t4clone.comment.Comment;
-import com.backend.hanghaew7t4clone.comment.CommentRepository;
-import com.backend.hanghaew7t4clone.exception.CardNotFoundException;
-import com.backend.hanghaew7t4clone.exception.InvalidAccessTokenException;
-import com.backend.hanghaew7t4clone.exception.InvalidTokenException;
-import com.backend.hanghaew7t4clone.exception.NotAuthorException;
-import com.backend.hanghaew7t4clone.member.jwt.TokenProvider;
+import com.backend.hanghaew7t4clone.exception.*;
+import com.backend.hanghaew7t4clone.jwt.TokenProvider;
 import com.backend.hanghaew7t4clone.member.Member;
 import com.backend.hanghaew7t4clone.shared.Message;
 import lombok.RequiredArgsConstructor;
@@ -63,7 +58,7 @@ public class CardService {
    public ResponseEntity<?> getCard(Long id) {
       Card card = isPresentCard(id);
       if (null == card) {
-         throw new CardNotFoundException();
+         throw new CustomException(ErrorCode.CARD_NOT_FOUND);
       }
 
       return new ResponseEntity<>(Message.success(
@@ -103,6 +98,7 @@ public class CardService {
       Card card = isPresentCard(id);
       tokenCheck(request, member);
       cardCheck(member, card);
+      //cascade 안먹을때는 아래 거로 쓰기
       List<Comment> commentList = commentRepository.findAllByCard(card);
       for (Comment comment : commentList) {
          commentRepository.delete(comment);
@@ -113,22 +109,22 @@ public class CardService {
 
    private void cardCheck(Member member, Card card) {
       if (null == card) {
-         throw new CardNotFoundException();
+         throw new CustomException(ErrorCode.CARD_NOT_FOUND);
       }
       if (card.getMember().getId()!= member.getId()) {
-         throw new NotAuthorException();
+         throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
       }
    }
 
    private void tokenCheck(HttpServletRequest request, Member member) {
       if (null == request.getHeader("Refresh-Token")) {
-         throw new InvalidTokenException();
+         throw new CustomException(ErrorCode.REFRESH_TOKEN_IS_EXPIRED);
       }
       if (null == request.getHeader("Authorization")) {
-         throw new InvalidAccessTokenException();
+         throw new CustomException(ErrorCode.TOKEN_IS_EXPIRED);
       }
       if (null == member) {
-         throw new InvalidTokenException();
+         throw new CustomException(ErrorCode.AUTHOR_NOT_FOUND);
       }
    }
    @Transactional(readOnly = true)
