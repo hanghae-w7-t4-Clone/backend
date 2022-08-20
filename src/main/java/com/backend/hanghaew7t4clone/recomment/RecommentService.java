@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -33,15 +34,10 @@ public class RecommentService {
         Optional<Card> card = cardRepository.findById(cardId);
         Optional<Comment> comment = commentRepository.findById(commentId);
         // 검증
-        List<ReComment> reCommentList = reCommentRepository.findAllById(commentId);
+        Set<ReComment> reCommentListDto = comment.get().getReCommentList();
         List<ReCommentResponseDto> reCommentResponseDtoList = new ArrayList<>();
-        for (ReComment reComment : reCommentList) {
-            reCommentResponseDtoList.add(ReCommentResponseDto.builder()
-                    .id(reComment.getId())
-                    .profilePhoto(reComment.getMember().getProfilePhoto())
-                    .nickname(reComment.getMember().getNickname())
-                    .content(reComment.getContent())
-                    .build());
+        for (ReComment reComment : reCommentListDto) {
+            reCommentResponseDtoList.add(reComment.getAllReCommentDto());
         }
         return ResponseDto.success(reCommentResponseDtoList);
     }
@@ -57,11 +53,7 @@ public class RecommentService {
             return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
         }
         // 검증
-        ReComment reComment = ReComment.builder()
-                .member(member)
-                .comment(comment)
-                .content(reCommentRequestDto.getContent())
-                .build();
+        ReComment reComment = new ReComment(reCommentRequestDto.getContent(), member, comment);
         reCommentRepository.save(reComment);
         return ResponseDto.success("대댓글 작성에 성공하셨습니다.");
     }
@@ -77,6 +69,9 @@ public class RecommentService {
             return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
         }
         ReComment reComment = isPresentReComment(reCommentId);
+        if (reComment.validateMember(member)) {
+            return ResponseDto.fail("BAD_REQUEST", "작성자만 수정할 수 있습니다.");
+        }
         if (null == reComment) {
             return ResponseDto.fail("NOT_FOUND", "존재하지 않는 댓글 id 입니다.");
         }

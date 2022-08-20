@@ -24,17 +24,21 @@ import static com.backend.hanghaew7t4clone.shared.Authority.ROLE_MEMBER;
 @Component
 public class TokenProvider {
 
+    @Value("${ACCESS_TOKEN_EXPIRE_TIME}")
+    static long accessTokenExpireTime;
+
+    @Value("${REFRESH_TOKEN_EXPIRE_TIME}")
+    static long refreshTokenExpireTime;
+
+
     private static final String AUTHORITIES_KEY = "auth";
     private static final String BEARER_PREFIX = "Bearer ";
-    private static final long ACCESS_TOKEN_EXPIRE_TIME =  1000 * 60 * 60 * 3;            //3시간
-    private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 7;     //7일
+    public static final long ACCESS_TOKEN_EXPIRE_TIME = accessTokenExpireTime;
+    private static final long REFRESH_TOKEN_EXPIRE_TIME = refreshTokenExpireTime;
 
     private final Key key;
 
-//    private final AccessTokenRepository accessTokenRepository;
-
     private final RefreshTokenRepository refreshTokenRepository;
-//  private final UserDetailsServiceImpl userDetailsService;
 
     public TokenProvider(@Value("${jwt.secret}") String secretKey,
                          RefreshTokenRepository refreshTokenRepository) {
@@ -59,12 +63,6 @@ public class TokenProvider {
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
-//        AccessToken accessTokenObject = AccessToken.builder()
-//                .id(member.getId())
-//                .member(member)
-//                .value(refreshToken)
-//                .build();
-//        accessTokenRepository.save(accessTokenObject);
 
         RefreshToken refreshTokenObject = RefreshToken.builder()
                 .id(member.getId())
