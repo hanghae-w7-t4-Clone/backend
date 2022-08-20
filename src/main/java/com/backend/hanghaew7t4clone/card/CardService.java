@@ -50,6 +50,7 @@ public class CardService {
                       .commentCount(card.getCommentCount())
                       .place(card.getPlace())
                       .createdAt(card.getCreatedAt())
+                      .modifiedAt(card.getModifiedAt())
                       .build()
       ), HttpStatus.OK);
    }
