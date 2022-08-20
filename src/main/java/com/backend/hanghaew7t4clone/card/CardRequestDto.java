@@ -12,4 +12,5 @@ import java.util.List;
 public class CardRequestDto {
   private String content;
   private List<String> imgUrlList;
+  private String place;
 }

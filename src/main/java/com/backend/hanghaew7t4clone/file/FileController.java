@@ -16,9 +16,9 @@ public class FileController {
    private final FileService fileService;
 
     @PostMapping("/auth/photos")
-    public ResponseEntity<?> upload(MultipartFile[] multipartFileList) throws Exception {
-       List<String> imageUrlList=fileService.getImgUrlList(multipartFileList);
-       return new ResponseEntity<>(Message.success(imageUrlList), HttpStatus.OK);
+    public ResponseEntity<?> upload(MultipartFile[] photoList) throws Exception {
+       List<String> imgUrlList=fileService.getImgUrlList(photoList);
+       return new ResponseEntity<>(Message.success(imgUrlList), HttpStatus.OK);
     }
 
 }
