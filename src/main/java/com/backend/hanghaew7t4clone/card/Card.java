@@ -5,10 +5,7 @@ import com.backend.hanghaew7t4clone.likes.Likes;
 import com.backend.hanghaew7t4clone.member.Member;
 import com.backend.hanghaew7t4clone.shared.Timestamped;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -16,11 +13,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Builder
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Card extends Timestamped {
 
    @Column
