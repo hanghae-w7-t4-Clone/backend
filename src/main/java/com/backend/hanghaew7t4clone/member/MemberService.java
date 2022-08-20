@@ -64,7 +64,9 @@ public class MemberService {
 
         TokenDto tokenDto = tokenProvider.generateTokenDto(member);
         tokenToHeaders(tokenDto, response);
+
         return ResponseDto.success(nickname);
+
     }
 
 

@@ -1,6 +1,7 @@
 package com.backend.hanghaew7t4clone.comment;
 
 import com.backend.hanghaew7t4clone.card.Card;
+import com.backend.hanghaew7t4clone.likes.Likes;
 import com.backend.hanghaew7t4clone.member.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -37,7 +40,14 @@ public class Comment {
         this.card = card;
     }
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "comment", cascade = CascadeType.ALL)
+    private Set<Likes> likes = new HashSet<>();
+
     public boolean validateMember(Member member) {
         return !this.member.equals(member);
+    }
+
+    public void discountLikes(Likes likes) {
+        this.likes.remove(likes);
     }
 }
