@@ -16,7 +16,6 @@ import java.util.List;
 @AllArgsConstructor
 public class LikeResponseDto {
     private List<CardResponseDto> cardList;
-
     private List<CommentResponseDto>commentList;
 //    private List<ReCommentResponseDto>reCommentList;
 }
