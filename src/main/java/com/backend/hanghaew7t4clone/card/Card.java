@@ -1,13 +1,17 @@
 package com.backend.hanghaew7t4clone.card;
 
 import com.backend.hanghaew7t4clone.comment.Comment;
+import com.backend.hanghaew7t4clone.likes.Likes;
 import com.backend.hanghaew7t4clone.member.Member;
 import com.backend.hanghaew7t4clone.shared.Timestamped;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Entity
@@ -44,24 +48,11 @@ public class Card extends Timestamped {
    private Member member;
 
    @Column
-   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+   @OneToMany(mappedBy = "card",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
    private List<Comment> commentListDto;
 
-   //  @JsonIgnore
-//  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true) // 단방향
-//  // cascade = CascadeType.ALL , 현 Entity의 변경에 대해 관계를 맺은 Entity도 변경 전략을 결정합니다.
-//  // fetch = FetchType.LAZY, 관계된 Entity의 정보를 LAZY는 실제로 요청하는 순간 가져오는겁니다.
-//  // orphanRemoval = true, 관계 Entity에서 변경이 일어난 경우 DB 변경을 같이 할지 결정합니다.
-//  private List<Comment> comments;
-   @Builder
-   public Card(String nickname, List<String> imgUrlList,int likeCount, String content,int commentCount, Member member) {
-              this.nickname=nickname;
-              this.imgUrlList=imgUrlList;
-              this.likeCount=likeCount;
-              this.content=content;
-              this.commentCount=commentCount;
-              this.member=member;
-   }
+   @OneToMany(fetch = FetchType.LAZY, mappedBy = "card", cascade = CascadeType.ALL)
+   private Set<Likes> likes = new HashSet<>();
 
    public void setMember(Member member) {
       this.member = member;
@@ -72,8 +63,8 @@ public class Card extends Timestamped {
    }
 
 
-   public void updateLikes(int likes) {
-      this.likeCount = likes;
+   public void discountLikes(Likes likes) {
+      this.likes.remove(likes);
    }
 
 }

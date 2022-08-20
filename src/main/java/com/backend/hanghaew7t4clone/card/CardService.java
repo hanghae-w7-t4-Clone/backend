@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,7 +20,7 @@ public class CardService {
 
    private final CardRepository cardRepository;
    private final TokenProvider tokenProvider;
-//   private final CommentRepository commentRepository;
+   private final CommentRepository commentRepository;
 
 
    @Transactional
@@ -34,6 +35,7 @@ public class CardService {
               .likeCount(0)
               .content(requestDto.getContent())
               .commentCount(0)
+              .place(requestDto.getPlace())
               .member(member)
               .build();
       cardRepository.save(card);
@@ -94,14 +96,13 @@ public class CardService {
 
       Member member = validateMember(request);
       Card card = isPresentCard(id);
-      tokenCheck(request,member);
+      tokenCheck(request, member);
       cardCheck(member, card);
       //cascade 안먹을때는 아래 거로 쓰기
-//      List<Comment> commentList=commentRepository.findAllByCard(card);
-//      for (Comment comment : commentList) {
-//         commentRepository.delete(comment);
-//      }
-
+      List<Comment> commentList = commentRepository.findAllByCard(card);
+      for (Comment comment : commentList) {
+         commentRepository.delete(comment);
+      }
       cardRepository.delete(card);
       return new ResponseEntity<>(Message.success("delete success"),HttpStatus.OK);
    }

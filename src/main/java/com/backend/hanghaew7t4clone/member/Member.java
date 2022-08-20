@@ -44,8 +44,8 @@ public class Member extends Timestamped {
     private String profilePhoto;
 
 
-    public Member(Long id, String email, String phoneNum, String name, String nickname, String password, String content, String profilePhoto) {
-        this.id = id;
+    public Member(String email, String phoneNum, String name, String nickname, String password, String content, String profilePhoto) {
+        this.id = getId();
         this.email = email;
         this.phoneNum = phoneNum;
         this.name = name;
@@ -56,8 +56,8 @@ public class Member extends Timestamped {
     }
 
     @Builder
-    public Member(Long id, String email, String name, String nickname, String password, String phoneNum) {
-        this.id = id;
+    public Member(String email, String name, String nickname, String password, String phoneNum) {
+        this.id = getId();
         this.email = email;
         this.phoneNum =phoneNum;
         this.name = name;

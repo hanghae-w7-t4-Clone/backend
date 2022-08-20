@@ -1,10 +1,10 @@
 package com.backend.hanghaew7t4clone.configuration;
 
 
-import com.backend.hanghaew7t4clone.jwt.AccessDeniedHandlerException;
-import com.backend.hanghaew7t4clone.jwt.AuthenticationEntryPointException;
-import com.backend.hanghaew7t4clone.jwt.TokenProvider;
-import com.backend.hanghaew7t4clone.jwt.UserDetailsServiceImpl;
+import com.backend.hanghaew7t4clone.member.jwt.AccessDeniedHandlerException;
+import com.backend.hanghaew7t4clone.member.jwt.AuthenticationEntryPointException;
+import com.backend.hanghaew7t4clone.member.jwt.TokenProvider;
+import com.backend.hanghaew7t4clone.member.jwt.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
@@ -15,7 +15,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
