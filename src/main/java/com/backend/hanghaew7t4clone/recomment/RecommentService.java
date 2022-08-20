@@ -34,7 +34,7 @@ public class RecommentService {
         Optional<Comment> comment = commentRepository.findById(commentId);
         // 검증
         List<ReComment> reCommentList = reCommentRepository.findAllById(commentId);
-        List<ReCommentResponseDto> reCommentResponseDtoList = new ArrayList<>;
+        List<ReCommentResponseDto> reCommentResponseDtoList = new ArrayList<>();
         for (ReComment reComment : reCommentList) {
             reCommentResponseDtoList.add(ReCommentResponseDto.builder()
                     .id(reComment.getId())
