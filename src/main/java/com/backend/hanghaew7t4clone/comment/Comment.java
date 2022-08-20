@@ -3,7 +3,7 @@ package com.backend.hanghaew7t4clone.comment;
 import com.backend.hanghaew7t4clone.card.Card;
 import com.backend.hanghaew7t4clone.likes.Likes;
 import com.backend.hanghaew7t4clone.member.Member;
-import lombok.AllArgsConstructor;
+import com.backend.hanghaew7t4clone.recomment.ReComment;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +15,6 @@ import java.util.Set;
 @Entity
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 public class Comment {
 
     @Id
@@ -33,10 +32,13 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     private Card card;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ReComment> reComment = new HashSet<>();
+
     @Builder
-    public Comment(Member member, String content, Card card) {
-        this.member = member;
+    public Comment(String content, Member member, Card card) {
         this.content = content;
+        this.member = member;
         this.card = card;
     }
 

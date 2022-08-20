@@ -2,8 +2,8 @@ package com.backend.hanghaew7t4clone.member;
 
 
 import com.backend.hanghaew7t4clone.dto.ResponseDto;
-import com.backend.hanghaew7t4clone.jwt.TokenDto;
-import com.backend.hanghaew7t4clone.jwt.TokenProvider;
+import com.backend.hanghaew7t4clone.member.jwt.TokenDto;
+import com.backend.hanghaew7t4clone.member.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

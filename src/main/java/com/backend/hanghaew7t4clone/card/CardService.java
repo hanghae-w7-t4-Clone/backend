@@ -4,7 +4,7 @@ import com.backend.hanghaew7t4clone.exception.CardNotFoundException;
 import com.backend.hanghaew7t4clone.exception.InvalidAccessTokenException;
 import com.backend.hanghaew7t4clone.exception.InvalidTokenException;
 import com.backend.hanghaew7t4clone.exception.NotAuthorException;
-import com.backend.hanghaew7t4clone.jwt.TokenProvider;
+import com.backend.hanghaew7t4clone.member.jwt.TokenProvider;
 import com.backend.hanghaew7t4clone.member.Member;
 import com.backend.hanghaew7t4clone.shared.Message;
 import lombok.RequiredArgsConstructor;

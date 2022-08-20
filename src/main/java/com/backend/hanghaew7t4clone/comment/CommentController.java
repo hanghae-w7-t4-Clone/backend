@@ -13,8 +13,8 @@ public class CommentController {
     private final CommentService commentService;
 
     @GetMapping("/cards/{cardId}/comments")
-    public ResponseDto<?> getComment(@PathVariable Long cardId) {
-        return commentService.getComment(cardId);
+    public ResponseDto<?> getAllComment(@PathVariable Long cardId) {
+        return commentService.getAllComment(cardId);
     }
 
     @PostMapping("/auth/cards/{cardId}/comments")
