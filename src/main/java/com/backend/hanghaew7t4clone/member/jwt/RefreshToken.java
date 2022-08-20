@@ -1,4 +1,4 @@
-package com.backend.hanghaew7t4clone.jwt;
+package com.backend.hanghaew7t4clone.member.jwt;
 
 import com.backend.hanghaew7t4clone.member.Member;
 import com.backend.hanghaew7t4clone.shared.Timestamped;
