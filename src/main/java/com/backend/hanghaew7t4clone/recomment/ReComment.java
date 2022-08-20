@@ -1,7 +1,6 @@
 package com.backend.hanghaew7t4clone.recomment;
 
 import com.backend.hanghaew7t4clone.comment.Comment;
-import com.backend.hanghaew7t4clone.likes.Likes;
 import com.backend.hanghaew7t4clone.member.Member;
 import lombok.Builder;
 import lombok.Getter;
