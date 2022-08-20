@@ -13,6 +13,6 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CardLikeReponseDto {
+public class LikeResponseDto {
     private List<CardResponseDto> cardList;
 }

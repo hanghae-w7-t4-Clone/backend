@@ -1,7 +1,8 @@
-package com.backend.hanghaew7t4clone.likes;
+package com.backend.hanghaew7t4clone.Likess;
 
 
 import com.backend.hanghaew7t4clone.card.Card;
+import com.backend.hanghaew7t4clone.comment.Comment;
 import com.backend.hanghaew7t4clone.member.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +17,7 @@ import static javax.persistence.FetchType.LAZY;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CardLike {
+public class Likes {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,12 +31,29 @@ public class CardLike {
     @JoinColumn(name = "card_id")
     private Card card;
 
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "comment_id")
+    private Comment comment;
+
+//    @ManyToOne(fetch = LAZY)
+//    @JoinColumn(name = "sub_comment_id")
+//    private SubComment subComment;
+
+
+
     @Builder
-    public CardLike (Member member, Card card){
+    public Likes (Member member, Card card){
         this.member=member;
         this.card=card;
+        this.comment=null;
     }
 
+    @Builder
+    public Likes (Member member, Comment comment){
+        this.member=member;
+        this.card=null;
+        this.comment=comment;
+    }
 
 
 }

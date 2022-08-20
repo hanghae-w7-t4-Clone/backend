@@ -5,6 +5,8 @@ import com.backend.hanghaew7t4clone.card.Card;
 import com.backend.hanghaew7t4clone.card.CardRepository;
 import com.backend.hanghaew7t4clone.card.CardResponseDto;
 import com.backend.hanghaew7t4clone.card.CardService;
+import com.backend.hanghaew7t4clone.comment.Comment;
+import com.backend.hanghaew7t4clone.comment.CommentRepository;
 import com.backend.hanghaew7t4clone.comment.CommentResponseDto;
 import com.backend.hanghaew7t4clone.dto.ResponseDto;
 import com.backend.hanghaew7t4clone.jwt.TokenProvider;
@@ -29,7 +31,7 @@ private final TokenProvider tokenProvider;
 private final CardService cardService;
 private final CardRepository cardRepository;
 private final CommentLikeRepository commentLikeRepository;
-private final CardLikeRepository commentRepository;
+private final CommentRepository commentRepository;
 
 
     @Transactional
@@ -88,7 +90,7 @@ private final CardLikeRepository commentRepository;
     public List<CardResponseDto> getAllCardLikesByMember(Member member){
        List<CardLike> cardLikeList = cardLikeRepository.findCardLikesByMember(member);
        List<CardResponseDto> cardResponseDtoList = new ArrayList<>();
-        List<String> url = cardRepository.findByCard(cardLike.getCard());
+        List<String> url = ;
         for(CardLike cardLike : cardLikeList) {
             List<CardLike> cardLikeListByCard = cardLikeRepository.findAllByCard(cardLike.getCard());
             int likeCount= cardLikeListByCard.size();
@@ -122,7 +124,7 @@ private final CardLikeRepository commentRepository;
             return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
         }
 
-        CardLike comment =isPresentComment(id);
+        Comment comment =isPresentComment(id);
         if (comment==null){ return ResponseDto.fail("COMMENT_NOT_FOUND", "댓글이 존재하지 않습니다.");
         }
 
@@ -145,8 +147,8 @@ private final CardLikeRepository commentRepository;
         return ResponseDto.success(true);
     }
     @Transactional(readOnly = true)
-    public CardLike isPresentComment(Long id) {
-        Optional<CardLike> optionalComment = commentRepository.findById(id);
+    public Comment isPresentComment(Long id) {
+        Optional<Comment> optionalComment = commentRepository.findById(id);
         return optionalComment.orElse(null);
     }
 
