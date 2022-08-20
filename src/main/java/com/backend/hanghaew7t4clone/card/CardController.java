@@ -25,12 +25,12 @@ public class CardController {
     return cardService.getAllCard();
   }
 
-  @RequestMapping(value = "/auth/card/{id}", method = RequestMethod.PUT)
+  @RequestMapping(value = "/auth/cards/{id}", method = RequestMethod.PUT)
   public ResponseEntity<?> updateCard(@PathVariable Long id, @RequestBody CardRequestDto cardRequestDto,
       HttpServletRequest request) {
     return cardService.updateCard(id, cardRequestDto, request);
   }
-  @RequestMapping(value = "/auth/card/{id}", method = RequestMethod.DELETE)
+  @RequestMapping(value = "/auth/cards/{id}", method = RequestMethod.DELETE)
   public ResponseEntity<?> deleteCard(@PathVariable Long id,
       HttpServletRequest request) {
     return cardService.deleteCard(id, request);
