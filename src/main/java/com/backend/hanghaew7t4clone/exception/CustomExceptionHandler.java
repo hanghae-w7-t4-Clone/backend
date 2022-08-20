@@ -30,7 +30,7 @@ public class CustomExceptionHandler {
     return new ResponseEntity<>(Message.fail("NOT_FOUND", "member is not exist")
             , HttpStatus.NOT_FOUND);
   }
-  @ExceptionHandler(CardNotFoundException.class)
+  @ExceptionHandler(CustomException.class)
   public ResponseEntity<?> handlingCardNotFoundExceptions(){
     return new ResponseEntity<>(Message.fail("NOT_FOUND", "card is not exist")
             ,HttpStatus.NOT_FOUND);
