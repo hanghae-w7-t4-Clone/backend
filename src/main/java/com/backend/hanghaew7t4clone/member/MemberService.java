@@ -9,7 +9,6 @@ import com.backend.hanghaew7t4clone.jwt.RefreshTokenRepository;
 import com.backend.hanghaew7t4clone.jwt.TokenDto;
 import com.backend.hanghaew7t4clone.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,16 +16,12 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
-import java.time.temporal.TemporalAmount;
 import java.util.Objects;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class MemberService {
-
-    @Value("${ACCESS_TOKEN_EXPIRE_TIME}")
-    TemporalAmount accessTokenExpireTime;
 
     private final MemberRepository memberRepository;
 
@@ -130,7 +125,7 @@ public class MemberService {
             return ResponseDto.fail("REFRESH_TOKEN_NOT_FOUND", "로그인 정보가 맞지 않습니다.");
         }
         LocalDateTime currentDateTime =LocalDateTime.now();
-        if(!refreshTokenConfirm.getCreatedAt().plus(accessTokenExpireTime).equals(currentDateTime)){
+        if(!refreshTokenConfirm.getCreatedAt().plusHours(3).equals(currentDateTime)){
             return ResponseDto.fail("REFRESH_TOKEN_NOT_FOUND", "로그인 정보가 맞지 않습니다.");
         }
         if (Objects.equals(refreshTokenConfirm.getValue(), request.getHeader("Refresh-Token"))) {

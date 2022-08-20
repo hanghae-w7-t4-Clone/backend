@@ -24,17 +24,17 @@ import static com.backend.hanghaew7t4clone.shared.Authority.ROLE_MEMBER;
 @Component
 public class TokenProvider {
 
-    @Value("${ACCESS_TOKEN_EXPIRE_TIME}")
-    static long accessTokenExpireTime;
-
-    @Value("${REFRESH_TOKEN_EXPIRE_TIME}")
-    static long refreshTokenExpireTime;
+//    @Value("${ACCESS_TOKEN_EXPIRE_TIME}")
+//    static long accessTokenExpireTime;
+//
+//    @Value("${REFRESH_TOKEN_EXPIRE_TIME}")
+//    static long refreshTokenExpireTime;
 
 
     private static final String AUTHORITIES_KEY = "auth";
     private static final String BEARER_PREFIX = "Bearer ";
-    public static final long ACCESS_TOKEN_EXPIRE_TIME = accessTokenExpireTime;
-    private static final long REFRESH_TOKEN_EXPIRE_TIME = refreshTokenExpireTime;
+    public static final long ACCESS_TOKEN_EXPIRE_TIME = 10800000;
+    private static final long REFRESH_TOKEN_EXPIRE_TIME = 604800000;
 
     private final Key key;
 
