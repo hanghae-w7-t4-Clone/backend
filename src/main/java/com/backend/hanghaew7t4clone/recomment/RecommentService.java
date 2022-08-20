@@ -6,7 +6,7 @@ import com.backend.hanghaew7t4clone.comment.Comment;
 import com.backend.hanghaew7t4clone.comment.CommentRepository;
 import com.backend.hanghaew7t4clone.dto.ResponseDto;
 import com.backend.hanghaew7t4clone.member.Member;
-import com.backend.hanghaew7t4clone.member.jwt.TokenProvider;
+import com.backend.hanghaew7t4clone.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
