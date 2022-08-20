@@ -52,9 +52,6 @@ public class Card extends Timestamped {
    @JsonIgnore
    private Member member;
 
-//   @Column
-//   @OneToMany(mappedBy = "Card",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-//   private List<Comment> commentListDto;
 
   @JsonIgnore
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true) // 단방향

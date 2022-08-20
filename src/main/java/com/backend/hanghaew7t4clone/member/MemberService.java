@@ -2,6 +2,8 @@ package com.backend.hanghaew7t4clone.member;
 
 
 import com.backend.hanghaew7t4clone.dto.ResponseDto;
+import com.backend.hanghaew7t4clone.jwt.RefreshToken;
+import com.backend.hanghaew7t4clone.jwt.RefreshTokenRepository;
 import com.backend.hanghaew7t4clone.jwt.TokenDto;
 import com.backend.hanghaew7t4clone.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
@@ -21,6 +24,8 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     private final TokenProvider tokenProvider;
+
+    private final RefreshTokenRepository refreshTokenRepository;
 
     @Transactional
     public ResponseDto<?> creatMember(MemberRequestDto requestDto) {
@@ -104,4 +109,20 @@ public class MemberService {
     }
 
 
+    public ResponseDto<?> refreshToken(HttpServletRequest request, HttpServletResponse response) {
+        if (null == request.getHeader("Refresh-Token")) {
+            return ResponseDto.fail("REFRESH_TOKEN_NOT_FOUND",
+                    "로그인 시간이 만료되었습니다.");
+        }
+        refreshTokenRepository.findBy()
+        String nickname =member.getNickname();
+        TokenDto tokenDto = tokenProvider.generateTokenDto(member);
+        accessTokenToHeaders(tokenDto, response);
+        return ResponseDto.
+    }
+
+    public void accessTokenToHeaders(TokenDto tokenDto, HttpServletResponse response) {
+        response.addHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
+        response.addHeader("Access-Token-Expire-Time", tokenDto.getAccessTokenExpiresIn().toString());
+    }
 }
