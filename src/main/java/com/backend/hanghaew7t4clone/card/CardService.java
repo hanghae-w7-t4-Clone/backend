@@ -1,5 +1,7 @@
 package com.backend.hanghaew7t4clone.card;
 
+import com.backend.hanghaew7t4clone.comment.Comment;
+import com.backend.hanghaew7t4clone.comment.CommentRepository;
 import com.backend.hanghaew7t4clone.exception.*;
 import com.backend.hanghaew7t4clone.jwt.TokenProvider;
 import com.backend.hanghaew7t4clone.member.Member;
@@ -111,7 +113,7 @@ public class CardService {
       if (null == card) {
          throw new CustomException(ErrorCode.CARD_NOT_FOUND);
       }
-      if (card.getMember().getId()!= member.getId()) {
+      if (!card.getMember().getId().equals(member.getId())) {
          throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
       }
    }
