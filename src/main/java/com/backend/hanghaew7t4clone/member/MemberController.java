@@ -33,7 +33,7 @@ public class MemberController {
 
 
     @PostMapping("/users/refresh-token")
-    public ResponseDto<?> refreshTokenCheck(HttpServletRequest request, HttpServletResponse response){
-        return memberService.refreshToken(request, response);
+    public ResponseDto<?> refreshTokenCheck(@RequestBody String nickname, HttpServletRequest request, HttpServletResponse response){
+        return memberService.refreshToken(nickname, request, response);
     }
 }

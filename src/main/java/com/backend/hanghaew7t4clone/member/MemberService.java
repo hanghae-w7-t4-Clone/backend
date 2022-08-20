@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -109,17 +110,26 @@ public class MemberService {
     }
 
 
-    public ResponseDto<?> refreshToken(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseDto<?> refreshToken(String nickname,HttpServletRequest request, HttpServletResponse response) {
         if (null == request.getHeader("Refresh-Token")) {
             return ResponseDto.fail("REFRESH_TOKEN_NOT_FOUND",
                     "로그인 시간이 만료되었습니다.");
         }
-        refreshTokenRepository.findBy()
-        String nickname =member.getNickname();
-        TokenDto tokenDto = tokenProvider.generateTokenDto(member);
-        accessTokenToHeaders(tokenDto, response);
-        return ResponseDto.
-    }
+        Member requestingMember = memberRepository.findByNickname(nickname).orElse(null);
+        if (requestingMember == null) {
+            return ResponseDto.fail("MEMBER_NOT_FOUND", "로그인 정보가 맞지 않습니다.");
+        }
+        RefreshToken refreshTokenConfirm = refreshTokenRepository.findByMember(requestingMember).orElse(null);
+            if (Objects.equals(refreshTokenConfirm != null ? refreshTokenConfirm.getValue() : null, request.getHeader("Refresh-Token"))) {
+                TokenDto tokenDto = tokenProvider.generateTokenDto(requestingMember);
+                accessTokenToHeaders(tokenDto, response);
+                return ResponseDto.success("ACCESS_TOKEN_REISSUE");
+            } else {
+                return ResponseDto.fail("REFRESH_TOKEN_NOT_FOUND", "로그인 정보가 맞지 않습니다.");
+            }
+        }
+    
+
 
     public void accessTokenToHeaders(TokenDto tokenDto, HttpServletResponse response) {
         response.addHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
