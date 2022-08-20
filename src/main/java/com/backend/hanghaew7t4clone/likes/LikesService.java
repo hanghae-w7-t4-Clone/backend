@@ -8,8 +8,11 @@ import com.backend.hanghaew7t4clone.comment.CommentRepository;
 import com.backend.hanghaew7t4clone.dto.ResponseDto;
 import com.backend.hanghaew7t4clone.jwt.TokenProvider;
 import com.backend.hanghaew7t4clone.member.Member;
+import com.backend.hanghaew7t4clone.recomment.ReComment;
+import com.backend.hanghaew7t4clone.shared.Message;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,7 +46,7 @@ private final CommentRepository commentRepository;
             return ResponseDto.fail("CARD_NOT_FOUND", "게시글이 존재하지 않습니다.");
         }
         Likes likesToCardByMember = likesRepository.findByCardAndMember(card, member).orElse(null);
-        LikesResponseDto likesResponseDto = likeStatus(likesToCardByMember, member, card,null);
+        LikesResponseDto likesResponseDto = likeStatus(likesToCardByMember, member, card,null,null);
         return ResponseDto.success(likesResponseDto);
 
     }
@@ -80,11 +83,17 @@ private final CommentRepository commentRepository;
         }
 
         Likes likesToCommentByMember = likesRepository.findByCommentAndMember(comment, member).orElse(null);
-        LikesResponseDto likesResponseDto =likeStatus(likesToCommentByMember,member,null,comment)    ;
+        LikesResponseDto likesResponseDto =likeStatus(likesToCommentByMember,member,null,comment,null)    ;
         return ResponseDto.success(likesResponseDto);
         }
 
-    public LikesResponseDto likeStatus(Likes likesByUser, Member member, @Nullable Card card, @Nullable Comment comment) {
+    @Transactional
+    public ResponseDto<?> pushReCommentLikes(Long id, HttpServletRequest request) {
+        if (null==request.getHeader("Authorization"))
+        }
+    }
+
+    public LikesResponseDto likeStatus(Likes likesByUser, Member member, @Nullable Card card, @Nullable Comment comment, @Nullable ReComment reComment) {
         if (likesByUser == null) {
             if (card != null) {
                 Likes likes = new Likes(member, card);
@@ -96,7 +105,12 @@ private final CommentRepository commentRepository;
                 likesRepository.save(likes);
                 return new LikesResponseDto(comment.getId(), true, "좋아요를 했습니다.");
             }
-        } else {
+            if(reComment!=null){
+                Likes likes = new Likes(member, reComment);
+                likesRepository.save(likes);
+                return new LikesResponseDto(reComment.getId(), true, "좋아요를 했습니다.");
+            }
+        }else{
             if (card != null)  {
                 likesRepository.delete(likesByUser);
                 card.discountLikes(likesByUser);
@@ -107,6 +121,11 @@ private final CommentRepository commentRepository;
                 comment.discountLikes(likesByUser);
                 return new LikesResponseDto(comment.getId(), false, "좋아요를 취소했습니다.");
             }
+            if(reComment!=null){
+                Likes likes = new Likes(member, reComment);
+                likesRepository.save(likes);
+                return new LikesResponseDto(reComment.getId(), true, "좋아요를 했습니다.");
+            }
         }
         return null;
     }
@@ -116,6 +135,8 @@ private final CommentRepository commentRepository;
         Optional<Comment> optionalComment = commentRepository.findById(id);
         return optionalComment.orElse(null);
     }
+
+
 
 
 }
