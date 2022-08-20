@@ -99,6 +99,7 @@ public class CardService {
       Card card = isPresentCard(id);
       tokenCheck(request,member);
       cardCheck(member, card);
+      //cascade 안먹을때는 아래 거로 쓰기
 //      List<Comment> commentList=commentRepository.findAllByCard(card);
 //      for (Comment comment : commentList) {
 //         commentRepository.delete(comment);
