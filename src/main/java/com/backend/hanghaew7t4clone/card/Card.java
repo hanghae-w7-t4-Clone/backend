@@ -69,6 +69,8 @@ public class Card extends Timestamped {
 
    public void update(CardRequestDto postRequestDto) {
       this.content = postRequestDto.getContent();
+      this.imgUrlList=postRequestDto.getImgUrlList();
+      this.place= postRequestDto.getPlace();
    }
 
 
