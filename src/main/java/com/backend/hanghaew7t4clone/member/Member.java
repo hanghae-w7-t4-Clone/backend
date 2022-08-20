@@ -63,7 +63,7 @@ public class Member extends Timestamped {
         this.nickname = nickname;
         this.password = password;
         this.content = " ";
-        this.profilePhoto =" ";
+        this.profilePhoto ="https://springbucketss.s3.ap-northeast-2.amazonaws.com/basicprofile.png";
     }
 
     @Override
