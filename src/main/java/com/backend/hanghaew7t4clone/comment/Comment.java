@@ -4,10 +4,8 @@ import com.backend.hanghaew7t4clone.card.Card;
 import com.backend.hanghaew7t4clone.likes.Likes;
 import com.backend.hanghaew7t4clone.member.Member;
 import com.backend.hanghaew7t4clone.recomment.ReComment;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -35,6 +33,9 @@ public class Comment {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ReComment> reCommentList;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "comment", cascade = CascadeType.ALL)
+    private Set<Likes> likes = new HashSet<>();
+
     public Comment(String content, Member member, Card card) {
         this.content = content;
         this.member = member;
@@ -48,13 +49,6 @@ public class Comment {
                 .content(this.content)
                 .nickname(this.getMember().getNickname())
                 .build();
-    }
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "comment", cascade = CascadeType.ALL)
-    private Set<Likes> likes = new HashSet<>();
-
-    public boolean validateMember(Member member) {
-        return !this.member.equals(member);
     }
 
     public void discountLikes(Likes likes) {
