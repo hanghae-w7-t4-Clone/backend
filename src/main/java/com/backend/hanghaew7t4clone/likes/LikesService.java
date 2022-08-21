@@ -6,6 +6,7 @@ import com.backend.hanghaew7t4clone.card.CardRepository;
 import com.backend.hanghaew7t4clone.comment.Comment;
 import com.backend.hanghaew7t4clone.comment.CommentRepository;
 import com.backend.hanghaew7t4clone.dto.ResponseDto;
+import com.backend.hanghaew7t4clone.exception.CustomExceptionCheck;
 import com.backend.hanghaew7t4clone.jwt.TokenProvider;
 import com.backend.hanghaew7t4clone.member.Member;
 import com.backend.hanghaew7t4clone.recomment.ReComment;
@@ -26,25 +27,14 @@ import java.util.Optional;
 public class LikesService {
 
 private final LikesRepository likesRepository;
-private final TokenProvider tokenProvider;
-private final CardRepository cardRepository;
-private final CommentRepository commentRepository;
 
+private final CustomExceptionCheck customExceptionCheck;
 
     @Transactional
     public ResponseDto<?> pushCardLikes(Long cardId, HttpServletRequest request) {
-        if (null == request.getHeader("Authorization")) {
-            return ResponseDto.fail("MEMBER_NOT_FOUND",
-                    "로그인이 필요합니다.");
-        }
-        Member member = validateMember(request);
-        if (null == member) {
-            return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
-        }
-        Card card = isPresentCard(cardId);
-        if (card == null) {
-            return ResponseDto.fail("CARD_NOT_FOUND", "게시글이 존재하지 않습니다.");
-        }
+        Member member = customExceptionCheck.validateMember(request);
+        customExceptionCheck.tokenCheck(request,member);
+        Card card = customExceptionCheck.isPresentCard(cardId);
         Likes likesToCardByMember = likesRepository.findByCardAndMember(card, member).orElse(null);
         LikesResponseDto likesResponseDto = likeStatus(likesToCardByMember, member, card,null,null);
         return ResponseDto.success(likesResponseDto);
@@ -52,35 +42,12 @@ private final CommentRepository commentRepository;
     }
 
     @Transactional
-    public Member validateMember(HttpServletRequest request) {
-        if (!tokenProvider.validateToken(request.getHeader("Authorization").substring(7))) {
-            return null;
-        }
-        return tokenProvider.getMemberFromAuthentication();
-    }
-
-    @Transactional(readOnly = true)
-    public Card isPresentCard(Long id) {
-        Optional<Card> optionalCard = cardRepository.findById(id);
-        return optionalCard.orElse(null);
-    }
-
-    @Transactional
     public ResponseDto<?>pushCommentLikes (Long id, HttpServletRequest request) {
 
-        if (null == request.getHeader("Authorization")) {
-            return ResponseDto.fail("MEMBER_NOT_FOUND",
-                    "로그인이 필요합니다.");
-        }
+        Member member = customExceptionCheck.validateMember(request);
+        customExceptionCheck.tokenCheck(request,member);
 
-        Member member = validateMember(request);
-        if (null == member) {
-            return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
-        }
-
-        Comment comment =isPresentComment(id);
-        if (comment==null){ return ResponseDto.fail("COMMENT_NOT_FOUND", "댓글이 존재하지 않습니다.");
-        }
+        Comment comment =customExceptionCheck.isPresentComment(id);
 
         Likes likesToCommentByMember = likesRepository.findByCommentAndMember(comment, member).orElse(null);
         LikesResponseDto likesResponseDto =likeStatus(likesToCommentByMember,member,null,comment,null)    ;
@@ -89,8 +56,12 @@ private final CommentRepository commentRepository;
 
     @Transactional
     public ResponseDto<?> pushReCommentLikes(Long id, HttpServletRequest request) {
-        if (null==request.getHeader("Authorization"))
-        }
+        Member member = customExceptionCheck.validateMember(request);
+        customExceptionCheck.tokenCheck(request,member);
+        ReComment reComment =customExceptionCheck.isPresentReComment(id);
+        Likes likesToCommentByMember = likesRepository.findByReCommentAndMember(reComment, member).orElse(null);
+        LikesResponseDto likesResponseDto =likeStatus(likesToCommentByMember,member,null,null,reComment)    ;
+        return ResponseDto.success(likesResponseDto);
     }
 
     public LikesResponseDto likeStatus(Likes likesByUser, Member member, @Nullable Card card, @Nullable Comment comment, @Nullable ReComment reComment) {
@@ -122,20 +93,13 @@ private final CommentRepository commentRepository;
                 return new LikesResponseDto(comment.getId(), false, "좋아요를 취소했습니다.");
             }
             if(reComment!=null){
-                Likes likes = new Likes(member, reComment);
-                likesRepository.save(likes);
-                return new LikesResponseDto(reComment.getId(), true, "좋아요를 했습니다.");
+                likesRepository.delete(likesByUser);
+                reComment.discountLikes(likesByUser);
+                return new LikesResponseDto(reComment.getId(), false, "좋아요를 취소했습니다.");
             }
         }
         return null;
     }
-
-    @Transactional(readOnly = true)
-    public Comment isPresentComment(Long id) {
-        Optional<Comment> optionalComment = commentRepository.findById(id);
-        return optionalComment.orElse(null);
-    }
-
 
 
 
