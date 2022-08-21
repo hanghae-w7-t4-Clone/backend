@@ -41,12 +41,4 @@ public class ReComment {
                 .build();
     }
 
-    public ReCommentResponseDto getAllReCommentDto() {
-        return ReCommentResponseDto.builder()
-                .id(this.id)
-                .profilePhoto(this.getMember().getProfilePhoto())
-                .nickname(this.getMember().getNickname())
-                .content(this.content)
-                .build();
-    }
 }
