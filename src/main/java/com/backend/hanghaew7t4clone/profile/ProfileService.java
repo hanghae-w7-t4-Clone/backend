@@ -59,7 +59,7 @@ public class ProfileService {
       if (member==null){
          throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
       }
-      ;
+
       return member;
    }
    @Transactional(readOnly = true)

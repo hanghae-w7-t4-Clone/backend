@@ -10,10 +10,9 @@ public class MemberRequestDto {
 
     private String name;
 
-
     private String loginId;
 
-    public MemberRequestDto(){};
+    public MemberRequestDto(){}
 
     public MemberRequestDto(String nickname, String password, String name, String loginId){
         this.nickname=nickname;
