@@ -77,6 +77,7 @@ public class CardService {
       ),HttpStatus.OK);
    }
 
+
    @Transactional(readOnly = true)
    public ResponseEntity<?> getAllCard() {
       return new ResponseEntity<>(Message.success(cardRepository.findAllByOrderByCreatedAtDesc())
@@ -119,9 +120,6 @@ public class CardService {
    }
 
    private void tokenCheck(HttpServletRequest request, Member member) {
-      if (null == request.getHeader("Refresh-Token")) {
-         throw new CustomException(ErrorCode.REFRESH_TOKEN_IS_EXPIRED);
-      }
       if (null == request.getHeader("Authorization")) {
          throw new CustomException(ErrorCode.TOKEN_IS_EXPIRED);
       }
@@ -137,7 +135,7 @@ public class CardService {
 
    @Transactional
    public Member validateMember(HttpServletRequest request) {
-      if (!tokenProvider.validateToken(request.getHeader("Refresh-Token"))) {
+      if (!tokenProvider.validateToken(request.getHeader("Authorizantion").substring(7))) {
          return null;
       }
       return tokenProvider.getMemberFromAuthentication();

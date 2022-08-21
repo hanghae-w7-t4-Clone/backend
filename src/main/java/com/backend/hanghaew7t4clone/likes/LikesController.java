@@ -24,10 +24,10 @@ public class LikesController {
         return likesService.pushCommentLikes(id, request);
     }
 
-//    @PostMapping("auth/re-comments/{id}/Likes")
-//    public ResponseDto<?> pushReCommentLikes(@PathVariable Long id, HttpServletRequest request) {
-//        return LikesService.pushReCommentLikes(id, request);
-//    }
+    @PostMapping("auth/likes/cards/comments/re-comments/{id}")
+    public ResponseDto<?> pushReCommentLikes(@PathVariable Long id, HttpServletRequest request) {
+        return likesService.pushReCommentLikes(id, request);
+    }
 
 }
 
