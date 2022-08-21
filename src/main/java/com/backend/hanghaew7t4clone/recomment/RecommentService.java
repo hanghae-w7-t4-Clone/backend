@@ -1,5 +1,7 @@
 package com.backend.hanghaew7t4clone.recomment;
 
+import com.backend.hanghaew7t4clone.card.Card;
+import com.backend.hanghaew7t4clone.card.CardService;
 import com.backend.hanghaew7t4clone.comment.Comment;
 import com.backend.hanghaew7t4clone.comment.CommentRepository;
 import com.backend.hanghaew7t4clone.dto.ResponseDto;
@@ -21,6 +23,7 @@ public class RecommentService {
 
     private final TokenProvider tokenProvider;
     private final ReCommentRepository reCommentRepository;
+    private final CardService cardService;
     private final CommentRepository commentRepository;
     private final CustomExceptionCheck customExceptionCheck;
 
@@ -36,22 +39,22 @@ public class RecommentService {
 
     public ResponseDto<?> createReComment(ReCommentRequestDto reCommentRequestDto, Long cardId, Long commentId, HttpServletRequest request) {
         Member member = validateMember(request);
+        Card card = cardService.isPresentCard(cardId);
         Comment comment = commentRepository.findById(commentId).orElse(null);
         customExceptionCheck.tokenCheck(request, member);
-        customExceptionCheck.cardCheck(member, null, comment, null);
+        customExceptionCheck.commentCheck(member, card, comment);
         ReComment reComment = new ReComment(reCommentRequestDto.getContent(), member, comment);
         reCommentRepository.save(reComment);
         return ResponseDto.success("대댓글 작성에 성공하셨습니다.");
     }
 
-    public ResponseDto<?> deleteReComment(Long commentId, Long reCommentId, HttpServletRequest request) {
+    public ResponseDto<?> deleteReComment(Long cardId, Long commentId, Long reCommentId, HttpServletRequest request) {
         Member member = validateMember(request);
+        Card card = cardService.isPresentCard(cardId);
         Comment comment = commentRepository.findById(commentId).orElse(null);
         ReComment reComment = isPresentReComment(reCommentId);
-
         customExceptionCheck.tokenCheck(request, member);
-        customExceptionCheck.cardCheck(member, null, comment, reComment);
-
+        customExceptionCheck.reCommentCheck(member, card, comment, reComment);
         reCommentRepository.delete(reComment);
         return ResponseDto.success("대댓글 삭제에 성공하셨습니다.");
     }

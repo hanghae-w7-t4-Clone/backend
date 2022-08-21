@@ -22,7 +22,7 @@ public class RecommentController {
     }
 
     @DeleteMapping("/auth/cards/{cardId}/comments/{commentId}/re-comments/{reCommentId}")
-    public ResponseDto<?> deleteReComment(@PathVariable Long commentId, @PathVariable Long reCommentId, HttpServletRequest request) {
-        return recommentService.deleteReComment(commentId, reCommentId, request);
+    public ResponseDto<?> deleteReComment(@PathVariable Long cardId, @PathVariable Long commentId, @PathVariable Long reCommentId, HttpServletRequest request) {
+        return recommentService.deleteReComment(cardId, commentId, reCommentId, request);
     }
 }

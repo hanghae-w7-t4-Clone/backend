@@ -47,8 +47,7 @@ public class CommentService {
         }
 
         customExceptionCheck.tokenCheck(request, member);
-        customExceptionCheck.cardCheck(member, card, null, null);
-
+        customExceptionCheck.cardCheck(member, card);
         Comment comment = new Comment(commentRequestDto.getContent(), member, card);
         commentRepository.save(comment);
         return ResponseDto.success(commentRequestDto);
@@ -60,34 +59,10 @@ public class CommentService {
         Card card = cardService.isPresentCard(cardId);
         Comment comment = isPresentComment(commentId);
         customExceptionCheck.tokenCheck(request, member);
-        customExceptionCheck.cardCheck(member, card, comment, null);
+        customExceptionCheck.commentCheck(member, card, comment);
         commentRepository.delete(comment);
         return ResponseDto.success("삭제 완료");
     }
-
-//    private void cardCheck(Member member, Card card, Comment comment) {
-//        if (null == card) {
-//            throw new CustomException(ErrorCode.CARD_NOT_FOUND);
-//        }
-//        if (!card.getMember().getId().equals(member.getId())) {
-//            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
-//        }
-//        if (!comment.getMember().getId().equals(member.getId())) {
-//            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
-//        }
-//    }
-//
-//    private void tokenCheck(HttpServletRequest request, Member member) {
-//        if (null == request.getHeader("Refresh-Token")) {
-//            throw new CustomException(ErrorCode.REFRESH_TOKEN_IS_EXPIRED);
-//        }
-//        if (null == request.getHeader("Authorization")) {
-//            throw new CustomException(ErrorCode.TOKEN_IS_EXPIRED);
-//        }
-//        if (null == member) {
-//            throw new CustomException(ErrorCode.AUTHOR_NOT_FOUND);
-//        }
-//    }
 
     @Transactional(readOnly = true)
     public Comment isPresentComment(Long id) {
