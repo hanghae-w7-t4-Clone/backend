@@ -41,6 +41,11 @@ public class CommentService {
     public ResponseDto<?> createComment(CommentRequestDto commentRequestDto, Long cardId, HttpServletRequest request) {
         Member member = validateMember(request);
         Card card = cardService.isPresentCard(cardId);
+
+        if (null == card) {
+            return ResponseDto.fail("NOT_FOUND", "존재하지 않는 게시글입니다.");
+        }
+
         customExceptionCheck.tokenCheck(request, member);
         customExceptionCheck.cardCheck(member, card);
         Comment comment = new Comment(commentRequestDto.getContent(), member, card);

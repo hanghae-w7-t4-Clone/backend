@@ -1,10 +1,12 @@
 package com.backend.hanghaew7t4clone.recomment;
 
 import com.backend.hanghaew7t4clone.comment.Comment;
+import com.backend.hanghaew7t4clone.likes.Likes;
 import com.backend.hanghaew7t4clone.member.Member;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -25,7 +27,11 @@ public class ReComment {
     @JoinColumn(name = "comment_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Comment comment;
-    
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "reComment", cascade = CascadeType.ALL)
+    private Set<Likes> likesSet;
+
+
     public ReComment(String content, Member member, Comment comment) {
         this.content = content;
         this.member = member;
@@ -40,4 +46,9 @@ public class ReComment {
                 .content(this.content)
                 .build();
     }
+
+    public void discountLikes(Likes likes) {
+        this.likesSet.remove(likes);
+    }
+
 }

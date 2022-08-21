@@ -1,14 +1,24 @@
 package com.backend.hanghaew7t4clone.exception;
 
 import com.backend.hanghaew7t4clone.card.Card;
+import com.backend.hanghaew7t4clone.card.CardRepository;
 import com.backend.hanghaew7t4clone.comment.Comment;
+import com.backend.hanghaew7t4clone.comment.CommentRepository;
+import com.backend.hanghaew7t4clone.jwt.TokenProvider;
 import com.backend.hanghaew7t4clone.member.Member;
 import com.backend.hanghaew7t4clone.recomment.ReComment;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 import javax.servlet.http.HttpServletRequest;
 
 @Component
+@RequiredArgsConstructor
 public class CustomExceptionCheck {
+    private final CardRepository cardRepository;
+    private final CommentRepository commentRepository;
+    private final ReCommentRepository reCommentRepository;
+    private  final TokenProvider tokenProvider;
 
     public void cardCheck(Member member, Card card) {
         if (null == card) {
@@ -53,6 +63,41 @@ public class CustomExceptionCheck {
         if (null == member) {
             throw new CustomException(ErrorCode.AUTHOR_NOT_FOUND);
         }
+    }
+
+    @Transactional(readOnly = true)
+    public Comment isPresentComment(Long id) {
+        Optional<Comment> optionalComment = commentRepository.findById(id);
+        if (optionalComment.isPresent()) {
+            return optionalComment.orElseThrow();
+        } else {
+            throw new CustomException(ErrorCode.COMMENT_NOT_FOUND);}
+    }
+
+    @Transactional(readOnly = true)
+    public ReComment isPresentReComment(Long id) {
+        Optional<ReComment> optionalReComment = reCommentRepository.findById(id);
+        if (optionalReComment.isPresent()) {
+            return optionalReComment.orElseThrow();
+        } else {
+            throw new CustomException(ErrorCode.COMMENT_NOT_FOUND);}
+
+    }
+
+    @Transactional(readOnly = true)
+    public Card isPresentCard(Long id) {
+        Optional<Card> optionalCard = cardRepository.findById(id);
+        if (optionalCard.isPresent()) {
+            return optionalCard.orElseThrow();
+        } else {
+            throw new CustomException(ErrorCode.COMMENT_NOT_FOUND);}
+    }
+    @Transactional
+    public Member validateMember(HttpServletRequest request) {
+        if (!tokenProvider.validateToken(request.getHeader("Authorization").substring(7))) {
+            return null;
+        }
+        return tokenProvider.getMemberFromAuthentication();
     }
 }
 
