@@ -1,10 +1,17 @@
 package com.backend.hanghaew7t4clone.exception;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+
+import java.util.function.Supplier;
 
 @Getter
-@RequiredArgsConstructor
-public class CustomException extends IllegalArgumentException {
-    private final ErrorCode errorCode;
+@AllArgsConstructor
+public class CustomException extends RuntimeException implements Supplier<ErrorCode> {
+   private final ErrorCode errorCode;
+
+   @Override
+   public ErrorCode get() {
+      return errorCode;
+   }
 }

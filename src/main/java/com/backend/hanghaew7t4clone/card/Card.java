@@ -5,16 +5,16 @@ import com.backend.hanghaew7t4clone.likes.Likes;
 import com.backend.hanghaew7t4clone.member.Member;
 import com.backend.hanghaew7t4clone.shared.Timestamped;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Builder
 @Getter
-@AllArgsConstructor
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Card extends Timestamped {
@@ -53,7 +53,7 @@ public class Card extends Timestamped {
    private List<Comment> commentListDto;
 
    @OneToMany(fetch = FetchType.LAZY, mappedBy = "card", cascade = CascadeType.ALL)
-   private Set<Likes> likes = new HashSet<>();
+   private Set<Likes> likesSet;
    @Builder
    public Card(String nickname, List<String> imgUrlList,int likeCount, String content,int commentCount,String place, Member member) {
       this.nickname=nickname;
@@ -76,7 +76,7 @@ public class Card extends Timestamped {
 
 
    public void discountLikes(Likes likes) {
-      this.likes.remove(likes);
+      this.likesSet.remove(likes);
    }
 
 }

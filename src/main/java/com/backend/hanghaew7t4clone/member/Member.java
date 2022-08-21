@@ -1,9 +1,8 @@
 package com.backend.hanghaew7t4clone.member;
 
-import com.backend.hanghaew7t4clone.card.Card;
-import com.backend.hanghaew7t4clone.comment.Comment;
 import com.backend.hanghaew7t4clone.shared.Timestamped;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,13 +10,11 @@ import org.hibernate.Hibernate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 public class Member extends Timestamped {
 
@@ -43,16 +40,28 @@ public class Member extends Timestamped {
     @Column(nullable = false)
     private String content;
 
+
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Card> cardList;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Comment> commentList;
+
+
+
     @Column(nullable = false)
     private String profilePhoto;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    private Set<Card> cards;
-
-    @OneToMany
-    private Set<Comment> comments;
-
-
+    public Member(String email, String phoneNum, String name, String nickname, String password, String content, String profilePhoto) {
+        this.id = getId();
+        this.email = email;
+        this.phoneNum = phoneNum;
+        this.name = name;
+        this.nickname = nickname;
+        this.password = password;
+        this.content = content;
+        this.profilePhoto = profilePhoto;
+    }
 
     @Builder
     public Member(String email, String name, String nickname, String password, String phoneNum) {
@@ -63,7 +72,7 @@ public class Member extends Timestamped {
         this.nickname = nickname;
         this.password = password;
         this.content = " ";
-        this.profilePhoto =" ";
+        this.profilePhoto ="https://springbucketss.s3.ap-northeast-2.amazonaws.com/basicprofile.png";
     }
 
 
