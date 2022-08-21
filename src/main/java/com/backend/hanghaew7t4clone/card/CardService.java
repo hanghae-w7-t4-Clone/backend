@@ -135,7 +135,7 @@ public class CardService {
 
    @Transactional
    public Member validateMember(HttpServletRequest request) {
-      if (!tokenProvider.validateToken(request.getHeader("Refresh-Token"))) {
+      if (!tokenProvider.validateToken(request.getHeader("Authorizantion").substring(7))) {
          return null;
       }
       return tokenProvider.getMemberFromAuthentication();

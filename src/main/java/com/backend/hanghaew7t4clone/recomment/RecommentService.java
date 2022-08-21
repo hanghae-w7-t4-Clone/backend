@@ -26,9 +26,6 @@ public class RecommentService {
 
     public ResponseDto<?> getAllReComment(Long commentId) {
         Optional<Comment> comment = commentRepository.findById(commentId);
-
-        // 검증
-
         Set<ReComment> reCommentListDto = comment.get().getReCommentList();
         List<ReCommentResponseDto> reCommentResponseDtoList = new ArrayList<>();
         for (ReComment reComment : reCommentListDto) {
@@ -39,16 +36,9 @@ public class RecommentService {
 
     public ResponseDto<?> createReComment(ReCommentRequestDto reCommentRequestDto, Long cardId, Long commentId, HttpServletRequest request) {
         Member member = validateMember(request);
-
-        if (null == member) {
-            return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
-        }
-        // 검증
-
         Comment comment = commentRepository.findById(commentId).orElse(null);
         customExceptionCheck.tokenCheck(request, member);
         customExceptionCheck.cardCheck(member, null, comment, null);
-
         ReComment reComment = new ReComment(reCommentRequestDto.getContent(), member, comment);
         reCommentRepository.save(reComment);
         return ResponseDto.success("대댓글 작성에 성공하셨습니다.");

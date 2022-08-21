@@ -33,7 +33,7 @@ public class Comment {
     private Set<ReComment> reCommentList;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "comment", cascade = CascadeType.ALL)
-    private Set<Likes> likes;
+    private Set<Likes> likesSet;
 
     public Comment(String content, Member member, Card card) {
         this.content = content;
@@ -52,6 +52,6 @@ public class Comment {
     }
 
     public void discountLikes(Likes likes) {
-        this.likes.remove(likes);
+        this.likesSet.remove(likes);
     }
 }
