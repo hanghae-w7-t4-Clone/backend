@@ -31,7 +31,7 @@ public class ReComment {
         this.member = member;
         this.comment = comment;
     }
-
+    
     public ReCommentResponseDto getAllReCommentDto() {
         return ReCommentResponseDto.builder()
                 .id(this.id)
@@ -40,4 +40,5 @@ public class ReComment {
                 .content(this.content)
                 .build();
     }
+
 }

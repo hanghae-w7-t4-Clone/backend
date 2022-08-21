@@ -50,7 +50,7 @@ private final CommentRepository commentRepository;
 
     @Transactional
     public Member validateMember(HttpServletRequest request) {
-        if (!tokenProvider.validateToken(request.getHeader("Refresh-Token"))) {
+        if (!tokenProvider.validateToken(request.getHeader("Authorization").substring(7))) {
             return null;
         }
         return tokenProvider.getMemberFromAuthentication();

@@ -7,7 +7,6 @@ import com.backend.hanghaew7t4clone.recomment.ReComment;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -34,7 +33,7 @@ public class Comment {
     private Set<ReComment> reCommentList;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "comment", cascade = CascadeType.ALL)
-    private Set<Likes> likes = new HashSet<>();
+    private Set<Likes> likes;
 
     public Comment(String content, Member member, Card card) {
         this.content = content;
@@ -49,6 +48,7 @@ public class Comment {
                 .content(this.content)
                 .nickname(this.getMember().getNickname())
                 .build();
+
     }
 
     public void discountLikes(Likes likes) {
