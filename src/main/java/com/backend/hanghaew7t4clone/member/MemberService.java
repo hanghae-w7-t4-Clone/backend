@@ -2,14 +2,22 @@ package com.backend.hanghaew7t4clone.member;
 
 
 import com.backend.hanghaew7t4clone.dto.ResponseDto;
+import com.backend.hanghaew7t4clone.exception.CustomException;
+import com.backend.hanghaew7t4clone.exception.ErrorCode;
+import com.backend.hanghaew7t4clone.jwt.RefreshToken;
+import com.backend.hanghaew7t4clone.jwt.RefreshTokenRepository;
 import com.backend.hanghaew7t4clone.jwt.TokenDto;
 import com.backend.hanghaew7t4clone.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.cef.handler.CefLoadHandler;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -21,6 +29,8 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     private final TokenProvider tokenProvider;
+
+    private final RefreshTokenRepository refreshTokenRepository;
 
     @Transactional
     public ResponseDto<?> creatMember(MemberRequestDto requestDto) {
@@ -36,6 +46,7 @@ public class MemberService {
                     .phoneNum(requestDto.getLoginId())
                     .build();
             memberRepository.save(member);
+            return ResponseDto.success("CreatMember Success");
         } else if (requestDto.getLoginId().matches("[a-zA-Z\\d]{3,15}@[a-zA-Z\\d]{3,15}[.][a-zA-Z]{2,5}")) {
             member = Member.builder()
                     .nickname(requestDto.getNickname())
@@ -44,8 +55,9 @@ public class MemberService {
                     .name(requestDto.getName())
                     .build();
             memberRepository.save(member);
+            return ResponseDto.success("CreatMember Success");
         }
-        return ResponseDto.success("CreatMember Success");
+        return ResponseDto.fail("BAD_REQUEST","로그인 아이디가 올바르지 않습니다");
     }
 
     @Transactional
@@ -58,11 +70,12 @@ public class MemberService {
         if (!member.validatePassword(passwordEncoder, requestDto.getPassword())) {
             return ResponseDto.fail("INVALID_MEMBER", "사용자를 찾을 수 없습니다.");
         }
+        String nickname =member.getNickname();
 
         TokenDto tokenDto = tokenProvider.generateTokenDto(member);
         tokenToHeaders(tokenDto, response);
 
-        return ResponseDto.success("login success");
+        return ResponseDto.success(nickname);
 
     }
 
@@ -73,12 +86,10 @@ public class MemberService {
             return memberRepository.findByPhoneNum(loginId).orElse(null);
         } else if (loginId.matches("[a-zA-Z\\d]{3,15}@[a-zA-Z\\d]{3,15}[.][a-zA-Z]{2,5}")) {
             return memberRepository.findByEmail(loginId).orElse(null);
-        } else if(loginId.matches("[a-zA-Z\\d]{8,15}")) {
+        } else {
             return memberRepository.findByNickname(loginId).orElse(null);
         }
-        return null;
     }
-
 
     @Transactional(readOnly = true)
     public Member isPresentMember(String nickname) {
@@ -89,8 +100,7 @@ public class MemberService {
     @Transactional(readOnly = true)
     public ResponseDto<?> nickCheck(String loginId){
         if (null != isPresentMember(loginId)) {
-            return ResponseDto.fail("DUPLICATED_NICKNAME", "중복된 닉네임 입니다.");
-        }
+           throw new CustomException(ErrorCode.DUPLICATED_NICKNAME);}
         return ResponseDto.success("NICK_CHECK_SUCCESS");
     }
 
@@ -101,4 +111,37 @@ public class MemberService {
     }
 
 
+    public ResponseDto<?> refreshToken(String nickname,HttpServletRequest request, HttpServletResponse response) {
+        if (null == request.getHeader("Refresh-Token")) {
+            return ResponseDto.fail("REFRESH_TOKEN_NOT_FOUND",
+                    "로그인 시간이 만료되었습니다.");
+        }
+        Member requestingMember = memberRepository.findByNickname(nickname).orElse(null);
+        if (requestingMember == null) {
+            return ResponseDto.fail("MEMBER_NOT_FOUND", "로그인 정보가 맞지 않습니다.");
+        }
+        RefreshToken refreshTokenConfirm = refreshTokenRepository.findByMember(requestingMember).orElse(null);
+        if(refreshTokenConfirm==null){
+            return ResponseDto.fail("REFRESH_TOKEN_NOT_FOUND", "로그인 정보가 맞지 않습니다.");
+        }
+        LocalDateTime currentDateTime =LocalDateTime.now();
+        if(!refreshTokenConfirm.getCreatedAt().plusHours(3).equals(currentDateTime)){
+            return ResponseDto.fail("REFRESH_TOKEN_NOT_FOUND", "로그인 정보가 맞지 않습니다.");
+        }
+        if (Objects.equals(refreshTokenConfirm.getValue(), request.getHeader("Refresh-Token"))) {
+                TokenDto tokenDto = tokenProvider.generateTokenDto(requestingMember);
+                accessTokenToHeaders(tokenDto, response);
+                return ResponseDto.success("ACCESS_TOKEN_REISSUE");
+            } else {
+            tokenProvider.deleteRefreshToken(memberRepository.findByNickname(nickname).orElseThrow(
+                    () -> new CustomException(ErrorCode.INVALID_TOKEN))
+             );
+                return ResponseDto.fail("REFRESH_TOKEN_NOT_FOUND", "로그인 정보가 맞지 않습니다.");
+            }
+        }
+
+    public void accessTokenToHeaders(TokenDto tokenDto, HttpServletResponse response) {
+        response.addHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
+        response.addHeader("Access-Token-Expire-Time", tokenDto.getAccessTokenExpiresIn().toString());
+    }
 }

@@ -4,11 +4,12 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.backend.hanghaew7t4clone.exception.CustomException;
+import com.backend.hanghaew7t4clone.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -29,7 +30,9 @@ public class FileService {
       for(MultipartFile multipartFile: multipartFileList) {
          String originalName = multipartFile.getOriginalFilename(); // 파일 이름
          long size = multipartFile.getSize();  // 파일 크기
-         if(size>3500000) throw new MaxUploadSizeExceededException(3500000);
+         String type = multipartFile.getContentType();
+         if(!type.startsWith("image")) throw new CustomException(ErrorCode.FILE_TYPE_INVALID);
+         if(size>3500000) throw new CustomException(ErrorCode.FILE_SIZE_INVALID);
 
          ObjectMetadata objectMetaData = new ObjectMetadata();
          objectMetaData.setContentType(multipartFile.getContentType());
