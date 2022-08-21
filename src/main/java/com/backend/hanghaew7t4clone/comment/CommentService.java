@@ -42,7 +42,7 @@ public class CommentService {
         Member member = validateMember(request);
         Card card = cardService.isPresentCard(cardId);
         customExceptionCheck.tokenCheck(request, member);
-        customExceptionCheck.cardCheck(member, card, null, null);
+        customExceptionCheck.cardCheck(member, card);
         Comment comment = new Comment(commentRequestDto.getContent(), member, card);
         commentRepository.save(comment);
         return ResponseDto.success(commentRequestDto);
@@ -54,7 +54,7 @@ public class CommentService {
         Card card = cardService.isPresentCard(cardId);
         Comment comment = isPresentComment(commentId);
         customExceptionCheck.tokenCheck(request, member);
-        customExceptionCheck.cardCheck(member, card, comment, null);
+        customExceptionCheck.commentCheck(member, card, comment);
         commentRepository.delete(comment);
         return ResponseDto.success("삭제 완료");
     }
