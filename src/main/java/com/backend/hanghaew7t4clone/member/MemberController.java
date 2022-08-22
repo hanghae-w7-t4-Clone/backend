@@ -1,10 +1,12 @@
 package com.backend.hanghaew7t4clone.member;
 
 
-import com.backend.hanghaew7t4clone.dto.ResponseDto;
+import com.backend.hanghaew7t4clone.shared.ResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,28 +14,29 @@ import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/users")
 public class MemberController {
 
     private final MemberService memberService;
 
-    @PostMapping("/users/signup")
-    public ResponseDto<?> signup(@RequestBody MemberRequestDto requestDto){
+    @PostMapping("/signup")
+    public ResponseEntity<?> signup(@RequestBody MemberRequestDto requestDto){
         return memberService.creatMember(requestDto);
     }
 
-    @PostMapping("/users/login")
-    public ResponseDto<?> login(@RequestBody LoginRequestDto requestDto, HttpServletResponse response){
+    @PostMapping("/login")
+    public ResponseEntity<?>login(@RequestBody LoginRequestDto requestDto, HttpServletResponse response){
         return memberService.login(requestDto, response);
     }
 
-    @PostMapping("/users/nick-check")
-    public ResponseDto<?> nickCheck(@RequestBody String loginId){
+    @PostMapping("/nick-check")
+    public ResponseEntity<?> nickCheck(@RequestBody String loginId){
         return memberService.nickCheck(loginId);
     }
 
 
-    @PostMapping("/users/refresh-token")
-    public ResponseDto<?> refreshTokenCheck(@RequestBody String nickname, HttpServletRequest request, HttpServletResponse response){
+    @PostMapping("/refresh-token")
+    public ResponseEntity<?> refreshTokenCheck(@RequestBody String nickname, HttpServletRequest request, HttpServletResponse response){
         return memberService.refreshToken(nickname, request, response);
     }
 }
