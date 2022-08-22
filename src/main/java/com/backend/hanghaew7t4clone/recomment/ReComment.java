@@ -51,8 +51,8 @@ public class ReComment {
                 .build();
     }
 
-    public void updateLikes() {
-        this.likeCount= likesList.size();
+    public void updateLikes(int likes) {
+        this.likeCount= likes;
     }
     public void discountLikes(Likes likes) {
         this.likesList.remove(likes);
