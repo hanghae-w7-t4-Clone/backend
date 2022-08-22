@@ -1,5 +1,6 @@
 package com.backend.hanghaew7t4clone.recomment;
 
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -7,9 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequiredArgsConstructor
-public class RecommentController {
+public class ReCommentController {
 
-    private final RecommentService recommentService;
+    private final ReCommentService recommentService;
 
     @GetMapping("/auth/cards/{cardId}/comments/{commentId}/re-comments")
     public ResponseEntity<?> getAllReComment(@PathVariable Long commentId) {

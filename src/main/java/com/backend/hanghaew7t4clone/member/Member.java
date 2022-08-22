@@ -50,6 +50,9 @@ public class Member extends Timestamped {
     @OneToMany(fetch = FetchType.LAZY)
     private List<Comment> commentList;
 
+    @Column(nullable = false)
+    private String type;
+
 
 
     @Column(nullable = false)
@@ -76,7 +79,9 @@ public class Member extends Timestamped {
         this.password = password;
         this.content = " ";
         this.profilePhoto ="https://springbucketss.s3.ap-northeast-2.amazonaws.com/basicprofile.png";
+        this.type ="general";
     }
+
 
     public boolean validatePassword(PasswordEncoder passwordEncoder, String password){
         return passwordEncoder.matches(password,this.password);

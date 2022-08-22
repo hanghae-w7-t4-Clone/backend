@@ -3,8 +3,6 @@ package com.backend.hanghaew7t4clone.card;
 import com.backend.hanghaew7t4clone.comment.Comment;
 import com.backend.hanghaew7t4clone.comment.CommentRepository;
 import com.backend.hanghaew7t4clone.comment.CommentResponseDto;
-import com.backend.hanghaew7t4clone.comment.CommentService;
-import com.backend.hanghaew7t4clone.exception.*;
 import com.backend.hanghaew7t4clone.member.Member;
 import com.backend.hanghaew7t4clone.shared.Check;
 import com.backend.hanghaew7t4clone.shared.Message;
@@ -32,7 +30,7 @@ public class CardService {
    public ResponseEntity<?> createCard(CardRequestDto requestDto, HttpServletRequest request) {
 
       Member member = check.validateMember(request);
-      check.tokenCheck(request, member);
+      check.accessTokenCheck(request, member);
 
       Card card = Card.builder()
               .nickname(member.getNickname())
@@ -62,9 +60,7 @@ public class CardService {
    @Transactional(readOnly = true)
    public ResponseEntity<?> getCard(Long id) {
       Card card = check.isPresentCard(id);
-      if (null == card) {
-         throw new CustomException(ErrorCode.CARD_NOT_FOUND);
-      }
+      check.cardCheck(card);
       List<Comment> commentsListDto = card.getCommentListDto();
       List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
       for (Comment comment : commentsListDto) {
@@ -92,7 +88,7 @@ public class CardService {
       List<CardResponseDto> responseDtoList = new ArrayList<>();
       for (Card card : cards) {
          List<CommentResponseDto> commentList = new ArrayList<>();
-         List<Comment> comments = commentRepository.findTop2ByCardOrderByLikesSet(card);
+         List<Comment> comments = commentRepository.findTop2ByCardOrderByLikesList(card);
          for (Comment comment : comments) {
             commentList.add(
                     CommentResponseDto.builder()
@@ -124,8 +120,9 @@ public class CardService {
    public ResponseEntity<?> updateCard(Long id, CardRequestDto requestDto, HttpServletRequest request) {
       Member member = check.validateMember(request);
       Card card = check.isPresentCard(id);
-      check.tokenCheck(request, member);
-      check.cardCheck(member, card);
+      check.accessTokenCheck(request, member);
+      check.cardCheck(card);
+      check.cardAuthorCheck(member,card);
       card.update(requestDto);
       return new ResponseEntity<>(Message.success(card), HttpStatus.OK);
    }
@@ -135,8 +132,9 @@ public class CardService {
 
       Member member = check.validateMember(request);
       Card card = check.isPresentCard(id);
-      check.tokenCheck(request, member);
-      check.cardCheck(member, card);
+      check.accessTokenCheck(request, member);
+      check.cardCheck(card);
+      check.cardAuthorCheck(member, card);
 //      //cascade 안먹을때 여기
 //      List<Comment> commentList = commentRepository.findAllByCard(card);
 //      for (Comment comment : commentList) {
