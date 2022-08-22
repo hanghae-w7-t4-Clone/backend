@@ -93,7 +93,7 @@ public class CardService {
             commentList.add(
                     CommentResponseDto.builder()
                             .id(comment.getId())
-//                            .profilePhoto(comment.get)
+                            .profilePhoto(comment.getMember().getProfilePhoto())
                             .nickname(card.getNickname())
                             .content(card.getContent())
                             .build());
