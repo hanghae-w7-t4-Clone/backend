@@ -74,6 +74,9 @@ public class Card extends Timestamped {
       this.imgUrlList=postRequestDto.getImgUrlList();
       this.place= postRequestDto.getPlace();
    }
+   public void updateComment(int commentCount){
+      this.commentCount=commentCount;
+   }
 
    public void updateLikes(int likes) {
       this.likeCount= likes;

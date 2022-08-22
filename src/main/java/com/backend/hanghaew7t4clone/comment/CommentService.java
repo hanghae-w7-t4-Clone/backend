@@ -2,8 +2,7 @@ package com.backend.hanghaew7t4clone.comment;
 
 import com.backend.hanghaew7t4clone.card.Card;
 
-import com.backend.hanghaew7t4clone.exception.CustomException;
-import com.backend.hanghaew7t4clone.exception.ErrorCode;
+import com.backend.hanghaew7t4clone.card.CardRepository;
 import com.backend.hanghaew7t4clone.shared.Check;
 import com.backend.hanghaew7t4clone.member.Member;
 import com.backend.hanghaew7t4clone.shared.Message;
@@ -21,6 +20,7 @@ import java.util.List;
 public class CommentService {
 
     private final CommentRepository commentRepository;
+    private final CardRepository cardRepository;
     private final Check check;
 
     @Transactional
@@ -44,6 +44,8 @@ public class CommentService {
         check.accessTokenCheck(request, member);
         Comment comment = new Comment(commentRequestDto.getContent(), member, card);
         commentRepository.save(comment);
+        int commentCount = commentRepository.findAllByCard(card).size();
+        card.updateComment(commentCount);
         return new ResponseEntity<>(Message.success("댓글 작성에 성공하셨습니다."), HttpStatus.OK);
     }
 
