@@ -88,7 +88,8 @@ public class CardService {
       List<CardResponseDto> responseDtoList = new ArrayList<>();
       for (Card card : cards) {
          List<CommentResponseDto> commentList = new ArrayList<>();
-         List<Comment> comments = commentRepository.findTop2ByCardOrderByLikeCountDesc(card);
+         List<Comment>comments=card.getCommentListDto();
+//         List<Comment> comments = commentRepository.findTop2ByCardOrderByLikeCountDesc(card);
          for (Comment comment : comments) {
             commentList.add(
                     CommentResponseDto.builder()
