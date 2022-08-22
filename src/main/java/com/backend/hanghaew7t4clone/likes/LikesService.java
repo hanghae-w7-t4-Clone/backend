@@ -30,7 +30,7 @@ private final LikesRepository likesRepository;
     @Transactional
     public ResponseEntity<?> pushCardLikes(Long cardId, HttpServletRequest request) {
         Member member = check.validateMember(request);
-        check.tokenCheck(request,member);
+        check.accessTokenCheck(request,member);
         Card card = check.isPresentCard(cardId);
         if(card==null){throw new CustomException(ErrorCode.CARD_NOT_FOUND);}
         Likes likesToCardByMember = likesRepository.findByCardAndMember(card, member).orElse(null);
@@ -42,7 +42,7 @@ private final LikesRepository likesRepository;
     public ResponseEntity<?> pushCommentLikes (Long id, HttpServletRequest request) {
 
         Member member = check.validateMember(request);
-        check.tokenCheck(request,member);
+        check.accessTokenCheck(request,member);
 
         Comment comment = check.isPresentComment(id);
 
@@ -55,7 +55,7 @@ private final LikesRepository likesRepository;
 
     public ResponseEntity<?> pushReCommentLikes(Long id, HttpServletRequest request) {
         Member member = check.validateMember(request);
-        check.tokenCheck(request,member);
+        check.accessTokenCheck(request,member);
         ReComment reComment = check.isPresentReComment(id);
         Likes likesToCommentByMember = likesRepository.findByReCommentAndMember(reComment, member).orElse(null);
         LikesResponseDto likesResponseDto =likeStatus(likesToCommentByMember,member,null,null,reComment)    ;
