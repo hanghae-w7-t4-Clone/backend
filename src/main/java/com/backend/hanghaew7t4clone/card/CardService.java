@@ -108,6 +108,7 @@ public class CardService {
                          .content(card.getContent())
                          .commentCount(card.getCommentCount())
                          .place(card.getPlace())
+                         .profilePhoto(card.getMember().getProfilePhoto())
                          .createdAt(card.getCreatedAt())
                          .modifiedAt(card.getModifiedAt())
                          .commentResponseDto(commentList)
