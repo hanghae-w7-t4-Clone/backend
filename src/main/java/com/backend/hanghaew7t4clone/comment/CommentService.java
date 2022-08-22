@@ -44,6 +44,8 @@ public class CommentService {
         return new ResponseEntity<>(Message.success("댓글 작성에 성공하셨습니다."), HttpStatus.OK);
     }
 
+    // 코멘트를 적을 때
+
     @Transactional
     public ResponseEntity<?> deleteComment(Long cardId, Long commentId, HttpServletRequest request) {
         Member member = check.validateMember(request);
