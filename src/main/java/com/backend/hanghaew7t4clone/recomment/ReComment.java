@@ -35,7 +35,6 @@ public class ReComment {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "reComment", cascade = CascadeType.ALL)
     private List<Likes> likesList;
 
-
     public ReComment(String content, Member member, Comment comment) {
         this.content = content;
         this.member = member;

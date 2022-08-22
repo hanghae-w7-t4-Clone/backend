@@ -52,7 +52,6 @@ public class Comment {
                 .content(this.content)
                 .nickname(this.getMember().getNickname())
                 .build();
-
     }
 
     public void updateLikes() {
