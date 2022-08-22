@@ -21,6 +21,9 @@ public class ReComment {
     @Column(nullable = false)
     private String content;
 
+    @Column
+    private int likeCount;
+
     @JoinColumn(name = "member_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
@@ -29,9 +32,6 @@ public class ReComment {
     @ManyToOne(fetch = FetchType.LAZY)
     private Comment comment;
 
-    @Column
-    private int likeCount;
-
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "reComment", cascade = CascadeType.ALL)
     private List<Likes> likesList;
 
@@ -39,6 +39,7 @@ public class ReComment {
         this.content = content;
         this.member = member;
         this.comment = comment;
+        this.likeCount = 0;
     }
 
     public ReCommentResponseDto getAllReCommentDto() {
@@ -50,8 +51,8 @@ public class ReComment {
                 .build();
     }
 
-    public void updateLikes() {
-        this.likeCount= likesList.size();
+    public void updateLikes(int likes) {
+        this.likeCount= likes;
     }
     public void discountLikes(Likes likes) {
         this.likesList.remove(likes);

@@ -3,12 +3,11 @@ package com.backend.hanghaew7t4clone.likes;
 
 import com.backend.hanghaew7t4clone.card.Card;
 import com.backend.hanghaew7t4clone.comment.Comment;
-import com.backend.hanghaew7t4clone.dto.ResponseDto;
 import com.backend.hanghaew7t4clone.exception.CustomException;
 import com.backend.hanghaew7t4clone.exception.ErrorCode;
-import com.backend.hanghaew7t4clone.shared.Check;
 import com.backend.hanghaew7t4clone.member.Member;
 import com.backend.hanghaew7t4clone.recomment.ReComment;
+import com.backend.hanghaew7t4clone.shared.Check;
 import com.backend.hanghaew7t4clone.shared.Message;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,9 +23,8 @@ import javax.servlet.http.HttpServletRequest;
 @Service
 @RequiredArgsConstructor
 public class LikesService {
-
-private final LikesRepository likesRepository;
 private final Check check;
+private final LikesRepository likesRepository;
 
     @Transactional
     public ResponseEntity<?> pushCardLikes(Long cardId, HttpServletRequest request) {
@@ -54,7 +52,7 @@ private final Check check;
 
     @Transactional
 
-    public ResponseDto<?> pushReCommentLikes(Long id, HttpServletRequest request) {
+    public ResponseEntity<?> pushReCommentLikes(Long id, HttpServletRequest request) {
         Member member = check.validateMember(request);
         check.tokenCheck(request,member);
         ReComment reComment = check.isPresentReComment(id);
@@ -68,38 +66,44 @@ private final Check check;
             if (card != null) {
                 Likes likes = new Likes(member, card);
                 likesRepository.save(likes);
-                card.updateLikes();
+                List<Likes> likeList = likesRepository.findAllByCard(card);
+                card.updateLikes(likeList.size());
                 return new LikesResponseDto(card.getId(), true, "좋아요를 했습니다.");
             }
             if(comment!=null){
                 Likes likes = new Likes(member, comment);
                 likesRepository.save(likes);
-                comment.updateLikes();
+                List<Likes> likeList = likesRepository.findAllByComment(comment);
+                comment.updateLikes(likeList.size());
                 return new LikesResponseDto(comment.getId(), true, "좋아요를 했습니다.");
             }
             if(reComment!=null){
                 Likes likes = new Likes(member, reComment);
                 likesRepository.save(likes);
-                reComment.updateLikes();
+                List<Likes> likeList = likesRepository.findAllByReComment(reComment);
+                reComment.updateLikes(likeList.size());
                 return new LikesResponseDto(reComment.getId(), true, "좋아요를 했습니다.");
             }
         }else{
             if (card != null)  {
                 likesRepository.delete(likesByUser);
                 card.discountLikes(likesByUser);
-                card.updateLikes();
+                List<Likes> likeList = likesRepository.findAllByCard(card);
+                card.updateLikes(likeList.size());
                 return new LikesResponseDto(card.getId(), false, "좋아요를 취소했습니다.");
             }
             if(comment!=null){
                 likesRepository.delete(likesByUser);
                 comment.discountLikes(likesByUser);
-                comment.updateLikes();
+                List<Likes> likeList = likesRepository.findAllByComment(comment);
+                comment.updateLikes(likeList.size());
                 return new LikesResponseDto(comment.getId(), false, "좋아요를 취소했습니다.");
             }
             if(reComment!=null){
                 likesRepository.delete(likesByUser);
                 reComment.discountLikes(likesByUser);
-                reComment.updateLikes();
+                List<Likes> likeList = likesRepository.findAllByReComment(reComment);
+                reComment.updateLikes(likeList.size());
                 return new LikesResponseDto(reComment.getId(), false, "좋아요를 취소했습니다.");
             }
         }
