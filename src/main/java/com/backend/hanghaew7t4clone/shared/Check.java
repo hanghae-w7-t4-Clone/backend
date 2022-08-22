@@ -1,9 +1,11 @@
-package com.backend.hanghaew7t4clone.exception;
+package com.backend.hanghaew7t4clone.shared;
 
 import com.backend.hanghaew7t4clone.card.Card;
 import com.backend.hanghaew7t4clone.card.CardRepository;
 import com.backend.hanghaew7t4clone.comment.Comment;
 import com.backend.hanghaew7t4clone.comment.CommentRepository;
+import com.backend.hanghaew7t4clone.exception.CustomException;
+import com.backend.hanghaew7t4clone.exception.ErrorCode;
 import com.backend.hanghaew7t4clone.jwt.TokenProvider;
 import com.backend.hanghaew7t4clone.member.Member;
 import com.backend.hanghaew7t4clone.recomment.ReComment;
@@ -11,13 +13,12 @@ import com.backend.hanghaew7t4clone.recomment.ReCommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class CustomExceptionCheck {
+public class Check {
     private final CardRepository cardRepository;
     private final CommentRepository commentRepository;
     private final ReCommentRepository reCommentRepository;
