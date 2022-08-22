@@ -1,4 +1,4 @@
-package com.backend.hanghaew7t4clone.dto;
+package com.backend.hanghaew7t4clone.shared;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
