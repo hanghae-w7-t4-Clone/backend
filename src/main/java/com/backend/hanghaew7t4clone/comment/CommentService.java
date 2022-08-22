@@ -1,8 +1,7 @@
 package com.backend.hanghaew7t4clone.comment;
 
 import com.backend.hanghaew7t4clone.card.Card;
-import com.backend.hanghaew7t4clone.card.CardService;
-import com.backend.hanghaew7t4clone.exception.CustomExceptionCheck;
+import com.backend.hanghaew7t4clone.shared.Check;
 import com.backend.hanghaew7t4clone.member.Member;
 import com.backend.hanghaew7t4clone.shared.Message;
 import lombok.RequiredArgsConstructor;
@@ -19,12 +18,11 @@ import java.util.List;
 public class CommentService {
 
     private final CommentRepository commentRepository;
-    private final CardService cardService;
-    private final CustomExceptionCheck customExceptionCheck;
+    private final Check check;
 
     @Transactional
     public ResponseEntity<?> getAllComment(Long cardId) {
-        Card card = cardService.isPresentCard(cardId);
+        Card card = check.isPresentCard(cardId);
         List<Comment> commentsListDto = card.getCommentListDto();
         List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
         for (Comment comment : commentsListDto) {
@@ -35,10 +33,10 @@ public class CommentService {
 
     @Transactional
     public ResponseEntity<?> createComment(CommentRequestDto commentRequestDto, Long cardId, HttpServletRequest request) {
-        Member member = customExceptionCheck.validateMember(request);
-        Card card = cardService.isPresentCard(cardId);
-        customExceptionCheck.tokenCheck(request, member);
-        customExceptionCheck.cardCheck(member, card);
+        Member member = check.validateMember(request);
+        Card card = check.isPresentCard(cardId);
+        check.tokenCheck(request, member);
+        check.cardCheck(member, card);
         Comment comment = new Comment(commentRequestDto.getContent(), member, card);
         commentRepository.save(comment);
         return new ResponseEntity<>(Message.success("댓글 작성에 성공하셨습니다."), HttpStatus.OK);
@@ -46,11 +44,11 @@ public class CommentService {
 
     @Transactional
     public ResponseEntity<?> deleteComment(Long cardId, Long commentId, HttpServletRequest request) {
-        Member member = customExceptionCheck.validateMember(request);
-        Card card = cardService.isPresentCard(cardId);
-        Comment comment = customExceptionCheck.isPresentComment(commentId);
-        customExceptionCheck.tokenCheck(request, member);
-        customExceptionCheck.commentCheck(member, card, comment);
+        Member member = check.validateMember(request);
+        Card card = check.isPresentCard(cardId);
+        Comment comment = check.isPresentComment(commentId);
+        check.tokenCheck(request, member);
+        check.commentCheck(member, card, comment);
         commentRepository.delete(comment);
         return new ResponseEntity<>(Message.success("댓글 삭제에 성공하셨습니다."), HttpStatus.OK);
     }

@@ -2,24 +2,18 @@ package com.backend.hanghaew7t4clone.likes;
 
 
 import com.backend.hanghaew7t4clone.card.Card;
-import com.backend.hanghaew7t4clone.card.CardRepository;
 import com.backend.hanghaew7t4clone.comment.Comment;
-import com.backend.hanghaew7t4clone.comment.CommentRepository;
 import com.backend.hanghaew7t4clone.dto.ResponseDto;
-import com.backend.hanghaew7t4clone.exception.CustomExceptionCheck;
-import com.backend.hanghaew7t4clone.jwt.TokenProvider;
+import com.backend.hanghaew7t4clone.shared.Check;
 import com.backend.hanghaew7t4clone.member.Member;
 import com.backend.hanghaew7t4clone.recomment.ReComment;
-import com.backend.hanghaew7t4clone.shared.Message;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -28,13 +22,13 @@ public class LikesService {
 
 private final LikesRepository likesRepository;
 
-private final CustomExceptionCheck customExceptionCheck;
+private final Check check;
 
     @Transactional
     public ResponseDto<?> pushCardLikes(Long cardId, HttpServletRequest request) {
-        Member member = customExceptionCheck.validateMember(request);
-        customExceptionCheck.tokenCheck(request,member);
-        Card card = customExceptionCheck.isPresentCard(cardId);
+        Member member = check.validateMember(request);
+        check.tokenCheck(request,member);
+        Card card = check.isPresentCard(cardId);
         Likes likesToCardByMember = likesRepository.findByCardAndMember(card, member).orElse(null);
         LikesResponseDto likesResponseDto = likeStatus(likesToCardByMember, member, card,null,null);
         return ResponseDto.success(likesResponseDto);
@@ -44,10 +38,10 @@ private final CustomExceptionCheck customExceptionCheck;
     @Transactional
     public ResponseDto<?>pushCommentLikes (Long id, HttpServletRequest request) {
 
-        Member member = customExceptionCheck.validateMember(request);
-        customExceptionCheck.tokenCheck(request,member);
+        Member member = check.validateMember(request);
+        check.tokenCheck(request,member);
 
-        Comment comment =customExceptionCheck.isPresentComment(id);
+        Comment comment = check.isPresentComment(id);
 
         Likes likesToCommentByMember = likesRepository.findByCommentAndMember(comment, member).orElse(null);
         LikesResponseDto likesResponseDto =likeStatus(likesToCommentByMember,member,null,comment,null)    ;
@@ -56,9 +50,9 @@ private final CustomExceptionCheck customExceptionCheck;
 
     @Transactional
     public ResponseDto<?> pushReCommentLikes(Long id, HttpServletRequest request) {
-        Member member = customExceptionCheck.validateMember(request);
-        customExceptionCheck.tokenCheck(request,member);
-        ReComment reComment =customExceptionCheck.isPresentReComment(id);
+        Member member = check.validateMember(request);
+        check.tokenCheck(request,member);
+        ReComment reComment = check.isPresentReComment(id);
         Likes likesToCommentByMember = likesRepository.findByReCommentAndMember(reComment, member).orElse(null);
         LikesResponseDto likesResponseDto =likeStatus(likesToCommentByMember,member,null,null,reComment)    ;
         return ResponseDto.success(likesResponseDto);
