@@ -25,7 +25,7 @@ public class CardController {
     return cardService.getAllCard();
   }
 
-  @RequestMapping(value = "/auth/cards/{id}", method = RequestMethod.PUT)
+  @RequestMapping(value = "/auth/cards/{id}", method = RequestMethod.PATCH)
   public ResponseEntity<?> updateCard(@PathVariable Long id, @RequestBody CardRequestDto cardRequestDto,
       HttpServletRequest request) {
     return cardService.updateCard(id, cardRequestDto, request);

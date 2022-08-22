@@ -1,13 +1,8 @@
 package com.backend.hanghaew7t4clone.card;
 
-import com.backend.hanghaew7t4clone.comment.Comment;
-import com.backend.hanghaew7t4clone.comment.CommentRepository;
-import com.backend.hanghaew7t4clone.exception.CardNotFoundException;
-import com.backend.hanghaew7t4clone.exception.InvalidAccessTokenException;
-import com.backend.hanghaew7t4clone.exception.InvalidTokenException;
-import com.backend.hanghaew7t4clone.exception.NotAuthorException;
-import com.backend.hanghaew7t4clone.member.jwt.TokenProvider;
+import com.backend.hanghaew7t4clone.exception.*;
 import com.backend.hanghaew7t4clone.member.Member;
+import com.backend.hanghaew7t4clone.shared.Check;
 import com.backend.hanghaew7t4clone.shared.Message;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,23 +11,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
 public class CardService {
 
    private final CardRepository cardRepository;
-   private final TokenProvider tokenProvider;
-   private final CommentRepository commentRepository;
+   private final Check check;
 
 
    @Transactional
    public ResponseEntity<?> createCard(CardRequestDto requestDto, HttpServletRequest request) {
 
-      Member member = validateMember(request);
-      tokenCheck(request, member);
+      Member member = check.validateMember(request);
+      check.tokenCheck(request, member);
 
       Card card = Card.builder()
               .nickname(member.getNickname())
@@ -61,9 +54,9 @@ public class CardService {
 
    @Transactional(readOnly = true)
    public ResponseEntity<?> getCard(Long id) {
-      Card card = isPresentCard(id);
+      Card card = check.isPresentCard(id);
       if (null == card) {
-         throw new CardNotFoundException();
+         throw new CustomException(ErrorCode.CARD_NOT_FOUND);
       }
 
       return new ResponseEntity<>(Message.success(
@@ -80,6 +73,7 @@ public class CardService {
       ),HttpStatus.OK);
    }
 
+
    @Transactional(readOnly = true)
    public ResponseEntity<?> getAllCard() {
       return new ResponseEntity<>(Message.success(cardRepository.findAllByOrderByCreatedAtDesc())
@@ -88,10 +82,10 @@ public class CardService {
 
    @Transactional
    public ResponseEntity<?> updateCard(Long id, CardRequestDto requestDto, HttpServletRequest request) {
-      Member member = validateMember(request);
-      Card card = isPresentCard(id);
-      tokenCheck(request,member);
-      cardCheck(member, card);
+      Member member = check.validateMember(request);
+      Card card = check.isPresentCard(id);
+      check.tokenCheck(request,member);
+      check.cardCheck(member, card);
       card.update(requestDto);
       return new ResponseEntity<>(Message.success(card),HttpStatus.OK);
    }
@@ -99,49 +93,17 @@ public class CardService {
    @Transactional
    public ResponseEntity<?> deleteCard(Long id, HttpServletRequest request) {
 
-      Member member = validateMember(request);
-      Card card = isPresentCard(id);
-      tokenCheck(request, member);
-      cardCheck(member, card);
-      List<Comment> commentList = commentRepository.findAllByCard(card);
-      for (Comment comment : commentList) {
-         commentRepository.delete(comment);
-      }
+      Member member = check.validateMember(request);
+      Card card = check.isPresentCard(id);
+      check.tokenCheck(request, member);
+      check.cardCheck(member, card);
+//      //cascade 안먹을때 여기
+//      List<Comment> commentList = commentRepository.findAllByCard(card);
+//      for (Comment comment : commentList) {
+//         commentRepository.delete(comment);
+//      }
       cardRepository.delete(card);
       return new ResponseEntity<>(Message.success("delete success"),HttpStatus.OK);
    }
 
-   private void cardCheck(Member member, Card card) {
-      if (null == card) {
-         throw new CardNotFoundException();
-      }
-      if (card.getMember().getId()!= member.getId()) {
-         throw new NotAuthorException();
-      }
-   }
-
-   private void tokenCheck(HttpServletRequest request, Member member) {
-      if (null == request.getHeader("Refresh-Token")) {
-         throw new InvalidTokenException();
-      }
-      if (null == request.getHeader("Authorization")) {
-         throw new InvalidAccessTokenException();
-      }
-      if (null == member) {
-         throw new InvalidTokenException();
-      }
-   }
-   @Transactional(readOnly = true)
-   public Card isPresentCard(Long id) {
-      Optional<Card> optionalCard = cardRepository.findById(id);
-      return optionalCard.orElse(null);
-   }
-
-   @Transactional
-   public Member validateMember(HttpServletRequest request) {
-      if (!tokenProvider.validateToken(request.getHeader("Refresh-Token"))) {
-         return null;
-      }
-      return tokenProvider.getMemberFromAuthentication();
-   }
 }

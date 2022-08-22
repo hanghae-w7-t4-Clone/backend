@@ -4,6 +4,7 @@ package com.backend.hanghaew7t4clone.likes;
 import com.backend.hanghaew7t4clone.card.Card;
 import com.backend.hanghaew7t4clone.comment.Comment;
 import com.backend.hanghaew7t4clone.member.Member;
+import com.backend.hanghaew7t4clone.recomment.ReComment;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,6 +36,9 @@ public class Likes {
     @JoinColumn(name = "comment_id")
     private Comment comment;
 
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "re_comment_id")
+    private ReComment reComment;
 
     @Builder
     public Likes (Member member, Card card){
@@ -48,6 +52,13 @@ public class Likes {
         this.member=member;
         this.card=null;
         this.comment=comment;
+    }
+
+    @Builder
+    public Likes (Member member, ReComment reComment){
+        this.member=member;
+        this.card=null;
+        this.reComment=reComment;
     }
 
 
