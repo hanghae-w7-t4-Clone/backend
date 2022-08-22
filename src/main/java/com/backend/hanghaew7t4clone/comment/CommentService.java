@@ -1,80 +1,57 @@
 package com.backend.hanghaew7t4clone.comment;
 
 import com.backend.hanghaew7t4clone.card.Card;
-import com.backend.hanghaew7t4clone.card.CardRepository;
 import com.backend.hanghaew7t4clone.card.CardService;
-import com.backend.hanghaew7t4clone.dto.ResponseDto;
 import com.backend.hanghaew7t4clone.exception.CustomExceptionCheck;
-import com.backend.hanghaew7t4clone.jwt.TokenProvider;
 import com.backend.hanghaew7t4clone.member.Member;
+import com.backend.hanghaew7t4clone.shared.Message;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class CommentService {
 
     private final CommentRepository commentRepository;
-    private final CardRepository cardRepository;
     private final CardService cardService;
-    private final TokenProvider tokenProvider;
     private final CustomExceptionCheck customExceptionCheck;
 
-
     @Transactional
-    public ResponseDto<?> getAllComment(Long cardId) {
-        Optional<Card> card = cardRepository.findById(cardId);
-        List<Comment> commentsListDto = card.get().getCommentListDto();
+    public ResponseEntity<?> getAllComment(Long cardId) {
+        Card card = cardService.isPresentCard(cardId);
+        List<Comment> commentsListDto = card.getCommentListDto();
         List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
         for (Comment comment : commentsListDto) {
             commentResponseDtoList.add(comment.getAllCommentDto());
         }
-        return ResponseDto.success(commentResponseDtoList);
+        return new ResponseEntity<>(Message.success(commentResponseDtoList), HttpStatus.OK);
     }
 
     @Transactional
-    public ResponseDto<?> createComment(CommentRequestDto commentRequestDto, Long cardId, HttpServletRequest request) {
-        Member member = validateMember(request);
+    public ResponseEntity<?> createComment(CommentRequestDto commentRequestDto, Long cardId, HttpServletRequest request) {
+        Member member = customExceptionCheck.validateMember(request);
         Card card = cardService.isPresentCard(cardId);
-
-        if (null == card) {
-            return ResponseDto.fail("NOT_FOUND", "존재하지 않는 게시글입니다.");
-        }
-
         customExceptionCheck.tokenCheck(request, member);
         customExceptionCheck.cardCheck(member, card);
         Comment comment = new Comment(commentRequestDto.getContent(), member, card);
         commentRepository.save(comment);
-        return ResponseDto.success(commentRequestDto);
+        return new ResponseEntity<>(Message.success("댓글 작성에 성공하셨습니다."), HttpStatus.OK);
     }
 
     @Transactional
-    public ResponseDto<?> deleteComment(Long cardId, Long commentId, HttpServletRequest request) {
-        Member member = validateMember(request);
+    public ResponseEntity<?> deleteComment(Long cardId, Long commentId, HttpServletRequest request) {
+        Member member = customExceptionCheck.validateMember(request);
         Card card = cardService.isPresentCard(cardId);
-        Comment comment = isPresentComment(commentId);
+        Comment comment = customExceptionCheck.isPresentComment(commentId);
         customExceptionCheck.tokenCheck(request, member);
         customExceptionCheck.commentCheck(member, card, comment);
         commentRepository.delete(comment);
-        return ResponseDto.success("삭제 완료");
-    }
-
-    @Transactional(readOnly = true)
-    public Comment isPresentComment(Long id) {
-        Optional<Comment> optionalComment = commentRepository.findById(id);
-        return optionalComment.orElse(null);
-    }
-
-    @Transactional
-    public Member validateMember(HttpServletRequest request) {
-        if (!tokenProvider.validateToken(request.getHeader("Authorization").substring(7))) {
-            return null;
-        }
-        return tokenProvider.getMemberFromAuthentication();
+        return new ResponseEntity<>(Message.success("댓글 삭제에 성공하셨습니다."), HttpStatus.OK);
     }
 }
