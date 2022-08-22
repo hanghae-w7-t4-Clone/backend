@@ -23,5 +23,6 @@ public class CardResponseDto {
    private String place;
    private LocalDateTime createdAt;
    private LocalDateTime modifiedAt;
+   private String profilePhoto;
    private List<CommentResponseDto> commentResponseDto;
 }
