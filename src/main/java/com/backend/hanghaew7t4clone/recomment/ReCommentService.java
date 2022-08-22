@@ -17,7 +17,7 @@ import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
-public class RecommentService {
+public class ReCommentService {
 
     private final ReCommentRepository reCommentRepository;
     private final CommentRepository commentRepository;
@@ -35,10 +35,12 @@ public class RecommentService {
 
     public ResponseEntity<?> createReComment(ReCommentRequestDto reCommentRequestDto, Long cardId, Long commentId, HttpServletRequest request) {
         Member member = check.validateMember(request);
+        check.memberCheck(member);
         Card card = check.isPresentCard(cardId);
+        check.cardCheck(card);
         Comment comment = commentRepository.findById(commentId).orElse(null);
-        check.tokenCheck(request, member);
-        check.commentCheck(member, card, comment);
+        check.accessTokenCheck(request, member);
+        check.commentCheck(comment);
         ReComment reComment = new ReComment(reCommentRequestDto.getContent(), member, comment);
         reCommentRepository.save(reComment);
         return new ResponseEntity<>(Message.success("대댓글 작성에 성공하셨습니다."), HttpStatus.OK);
@@ -46,11 +48,14 @@ public class RecommentService {
 
     public ResponseEntity<?> deleteReComment(Long cardId, Long commentId, Long reCommentId, HttpServletRequest request) {
         Member member = check.validateMember(request);
+        check.memberCheck(member);
         Card card = check.isPresentCard(cardId);
+        check.cardCheck(card);
         Comment comment = commentRepository.findById(commentId).orElse(null);
+        check.commentCheck(comment);
         ReComment reComment = check.isPresentReComment(reCommentId);
-        check.tokenCheck(request, member);
-        check.reCommentCheck(member, card, comment, reComment);
+        check.accessTokenCheck(request, member);
+        check.reCommentAuthorCheck(member,reComment);
         reCommentRepository.delete(reComment);
         return new ResponseEntity<>(Message.success("대댓글 삭제에 성공하셨습니다."), HttpStatus.OK);
     }
