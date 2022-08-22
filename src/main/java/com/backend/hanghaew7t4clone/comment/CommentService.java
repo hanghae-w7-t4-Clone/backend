@@ -1,6 +1,7 @@
 package com.backend.hanghaew7t4clone.comment;
 
 import com.backend.hanghaew7t4clone.card.Card;
+
 import com.backend.hanghaew7t4clone.exception.CustomException;
 import com.backend.hanghaew7t4clone.exception.ErrorCode;
 import com.backend.hanghaew7t4clone.shared.Check;
@@ -44,6 +45,8 @@ public class CommentService {
         return new ResponseEntity<>(Message.success("댓글 작성에 성공하셨습니다."), HttpStatus.OK);
     }
 
+    // 코멘트를 적을 때
+
     @Transactional
     public ResponseEntity<?> deleteComment(Long cardId, Long commentId, HttpServletRequest request) {
         Member member = check.validateMember(request);
@@ -53,5 +56,6 @@ public class CommentService {
         check.commentCheck(member, card, comment);
         commentRepository.delete(comment);
         return new ResponseEntity<>(Message.success("댓글 삭제에 성공하셨습니다."), HttpStatus.OK);
+
     }
 }

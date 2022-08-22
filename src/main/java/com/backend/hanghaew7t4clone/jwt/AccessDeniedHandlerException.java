@@ -1,8 +1,7 @@
 package com.backend.hanghaew7t4clone.jwt;
 
-import com.backend.hanghaew7t4clone.dto.ResponseDto;
+import com.backend.hanghaew7t4clone.shared.ResponseDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;

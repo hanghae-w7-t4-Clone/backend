@@ -6,6 +6,7 @@ import com.backend.hanghaew7t4clone.member.Member;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -28,8 +29,11 @@ public class ReComment {
     @ManyToOne(fetch = FetchType.LAZY)
     private Comment comment;
 
+    @Column
+    private int likeCount;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "reComment", cascade = CascadeType.ALL)
-    private Set<Likes> likesSet;
+    private List<Likes> likesList;
 
     public ReComment(String content, Member member, Comment comment) {
         this.content = content;
@@ -46,8 +50,11 @@ public class ReComment {
                 .build();
     }
 
+    public void updateLikes() {
+        this.likeCount= likesList.size();
+    }
     public void discountLikes(Likes likes) {
-        this.likesSet.remove(likes);
+        this.likesList.remove(likes);
     }
 
 }

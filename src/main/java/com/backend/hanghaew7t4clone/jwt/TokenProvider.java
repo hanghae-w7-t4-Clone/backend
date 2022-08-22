@@ -1,7 +1,6 @@
 package com.backend.hanghaew7t4clone.jwt;
 
 
-import com.backend.hanghaew7t4clone.dto.ResponseDto;
 import com.backend.hanghaew7t4clone.member.Member;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -71,7 +70,6 @@ public class TokenProvider {
                 .accessTokenExpiresIn(accessTokenExpiresIn.getTime())
                 .refreshToken(refreshToken)
                 .build();
-
     }
 
     public Member getMemberFromAuthentication() {
@@ -84,7 +82,6 @@ public class TokenProvider {
     }
 
     public boolean validateToken(String token) {
-//        String token= Authorization.substring(7);
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
@@ -107,14 +104,9 @@ public class TokenProvider {
     }
 
     @Transactional
-    public ResponseDto<?> deleteRefreshToken(Member member) {
+    public void deleteRefreshToken(Member member) {
         RefreshToken refreshToken = isPresentRefreshToken(member);
-        if (null == refreshToken) {
-            return ResponseDto.fail("TOKEN_NOT_FOUND", "존재하지 않는 Token 입니다.");
-        }
-
         refreshTokenRepository.delete(refreshToken);
-        return ResponseDto.success("Logout success");
     }
 
 }
