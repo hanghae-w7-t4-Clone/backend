@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -66,38 +67,44 @@ private final LikesRepository likesRepository;
             if (card != null) {
                 Likes likes = new Likes(member, card);
                 likesRepository.save(likes);
-                card.updateLikes();
+                List<Likes> likeList = likesRepository.findAllByCard(card);
+                card.updateLikes(likeList.size());
                 return new LikesResponseDto(card.getId(), true, "좋아요를 했습니다.");
             }
             if(comment!=null){
                 Likes likes = new Likes(member, comment);
                 likesRepository.save(likes);
-                comment.updateLikes();
+                List<Likes> likeList = likesRepository.findAllByComment(comment);
+                comment.updateLikes(likeList.size());
                 return new LikesResponseDto(comment.getId(), true, "좋아요를 했습니다.");
             }
             if(reComment!=null){
                 Likes likes = new Likes(member, reComment);
                 likesRepository.save(likes);
-                reComment.updateLikes();
+                List<Likes> likeList = likesRepository.findAllByReComment(reComment);
+                reComment.updateLikes(likeList.size());
                 return new LikesResponseDto(reComment.getId(), true, "좋아요를 했습니다.");
             }
         }else{
             if (card != null)  {
                 likesRepository.delete(likesByUser);
                 card.discountLikes(likesByUser);
-                card.updateLikes();
+                List<Likes> likeList = likesRepository.findAllByCard(card);
+                card.updateLikes(likeList.size());
                 return new LikesResponseDto(card.getId(), false, "좋아요를 취소했습니다.");
             }
             if(comment!=null){
                 likesRepository.delete(likesByUser);
                 comment.discountLikes(likesByUser);
-                comment.updateLikes();
+                List<Likes> likeList = likesRepository.findAllByComment(comment);
+                comment.updateLikes(likeList.size());
                 return new LikesResponseDto(comment.getId(), false, "좋아요를 취소했습니다.");
             }
             if(reComment!=null){
                 likesRepository.delete(likesByUser);
                 reComment.discountLikes(likesByUser);
-                reComment.updateLikes();
+                List<Likes> likeList = likesRepository.findAllByReComment(reComment);
+                reComment.updateLikes(likeList.size());
                 return new LikesResponseDto(reComment.getId(), false, "좋아요를 취소했습니다.");
             }
         }
