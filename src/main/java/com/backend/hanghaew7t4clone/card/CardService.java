@@ -88,14 +88,15 @@ public class CardService {
       List<CardResponseDto> responseDtoList = new ArrayList<>();
       for (Card card : cards) {
          List<CommentResponseDto> commentList = new ArrayList<>();
-         List<Comment> comments = commentRepository.findTop2ByCardOrderByLikesList(card);
+         List<Comment> comments = commentRepository.findTop2ByCardOrderByLikeCountDesc(card);
          for (Comment comment : comments) {
             commentList.add(
                     CommentResponseDto.builder()
                             .id(comment.getId())
                             .profilePhoto(comment.getMember().getProfilePhoto())
-                            .nickname(card.getNickname())
-                            .content(card.getContent())
+                            .nickname(comment.getMember().getNickname())
+                            .content(comment.getContent())
+                            .likeCount(comment.getLikeCount())
                             .build());
          }
 
@@ -136,11 +137,6 @@ public class CardService {
       check.accessTokenCheck(request, member);
       check.cardCheck(card);
       check.cardAuthorCheck(member, card);
-//      //cascade 안먹을때 여기
-//      List<Comment> commentList = commentRepository.findAllByCard(card);
-//      for (Comment comment : commentList) {
-//         commentRepository.delete(comment);
-//      }
       cardRepository.delete(card);
       return new ResponseEntity<>(Message.success("delete success"), HttpStatus.OK);
    }
