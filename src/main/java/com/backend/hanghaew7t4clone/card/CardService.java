@@ -1,5 +1,9 @@
 package com.backend.hanghaew7t4clone.card;
 
+import com.backend.hanghaew7t4clone.comment.Comment;
+import com.backend.hanghaew7t4clone.comment.CommentRepository;
+import com.backend.hanghaew7t4clone.comment.CommentResponseDto;
+import com.backend.hanghaew7t4clone.comment.CommentService;
 import com.backend.hanghaew7t4clone.exception.*;
 import com.backend.hanghaew7t4clone.member.Member;
 import com.backend.hanghaew7t4clone.shared.Check;
@@ -11,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Service
@@ -18,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 public class CardService {
 
    private final CardRepository cardRepository;
+   private final CommentRepository commentRepository;
    private final Check check;
 
 
@@ -58,7 +65,11 @@ public class CardService {
       if (null == card) {
          throw new CustomException(ErrorCode.CARD_NOT_FOUND);
       }
-
+      List<Comment> commentsListDto = card.getCommentListDto();
+      List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
+      for (Comment comment : commentsListDto) {
+         commentResponseDtoList.add(comment.getAllCommentDto());
+      }
       return new ResponseEntity<>(Message.success(
               CardResponseDto.builder()
                       .id(card.getId())
@@ -68,26 +79,55 @@ public class CardService {
                       .content(card.getContent())
                       .commentCount(card.getCommentCount())
                       .place(card.getPlace())
+                      .commentResponseDto(commentResponseDtoList)
                       .createdAt(card.getCreatedAt())
                       .build()
-      ),HttpStatus.OK);
+      ), HttpStatus.OK);
    }
 
 
    @Transactional(readOnly = true)
    public ResponseEntity<?> getAllCard() {
-      return new ResponseEntity<>(Message.success(cardRepository.findAllByOrderByCreatedAtDesc())
-              ,HttpStatus.OK);
+      List<Card> cards = cardRepository.findAllByOrderByCreatedAtDesc();
+      List<CardResponseDto> responseDtoList = new ArrayList<>();
+      for (Card card : cards) {
+         List<CommentResponseDto> commentList = new ArrayList<>();
+         List<Comment> comments = commentRepository.findTop2ByCardOrderByLikesSet(card);
+         for (Comment comment : comments) {
+            commentList.add(
+                    CommentResponseDto.builder()
+                            .id(comment.getId())
+//                            .profilePhoto(comment.get)
+                            .nickname(card.getNickname())
+                            .content(card.getContent())
+                            .build());
+         }
+
+         responseDtoList.add(
+                 CardResponseDto.builder()
+                         .id(card.getId())
+                         .nickname(card.getNickname())
+                         .imgUrlList(card.getImgUrlList())
+                         .likeCount(card.getLikeCount())
+                         .content(card.getContent())
+                         .commentCount(card.getCommentCount())
+                         .place(card.getPlace())
+                         .createdAt(card.getCreatedAt())
+                         .modifiedAt(card.getModifiedAt())
+                         .commentResponseDto(commentList)
+                         .build());
+      }
+      return new ResponseEntity<>(Message.success(responseDtoList), HttpStatus.OK);
    }
 
    @Transactional
    public ResponseEntity<?> updateCard(Long id, CardRequestDto requestDto, HttpServletRequest request) {
       Member member = check.validateMember(request);
       Card card = check.isPresentCard(id);
-      check.tokenCheck(request,member);
+      check.tokenCheck(request, member);
       check.cardCheck(member, card);
       card.update(requestDto);
-      return new ResponseEntity<>(Message.success(card),HttpStatus.OK);
+      return new ResponseEntity<>(Message.success(card), HttpStatus.OK);
    }
 
    @Transactional
@@ -103,7 +143,7 @@ public class CardService {
 //         commentRepository.delete(comment);
 //      }
       cardRepository.delete(card);
-      return new ResponseEntity<>(Message.success("delete success"),HttpStatus.OK);
+      return new ResponseEntity<>(Message.success("delete success"), HttpStatus.OK);
    }
 
 }
