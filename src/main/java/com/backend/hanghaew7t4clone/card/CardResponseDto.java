@@ -1,5 +1,6 @@
 package com.backend.hanghaew7t4clone.card;
 
+import com.backend.hanghaew7t4clone.comment.CommentResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,5 +23,5 @@ public class CardResponseDto {
    private String place;
    private LocalDateTime createdAt;
    private LocalDateTime modifiedAt;
-//   private List<CommentResponseDto> comments;
+   private List<CommentResponseDto> commentResponseDto;
 }

@@ -53,7 +53,8 @@ public class Card extends Timestamped {
    private List<Comment> commentListDto;
 
    @OneToMany(fetch = FetchType.LAZY, mappedBy = "card", cascade = CascadeType.ALL)
-   private Set<Likes> likesSet;
+   private List<Likes> likesList;
+
    @Builder
    public Card(String nickname, List<String> imgUrlList,int likeCount, String content,int commentCount,String place, Member member) {
       this.nickname=nickname;
@@ -74,9 +75,11 @@ public class Card extends Timestamped {
       this.place= postRequestDto.getPlace();
    }
 
-
+   public void updateLikes(int likes) {
+      this.likeCount= likes;
+   }
    public void discountLikes(Likes likes) {
-      this.likesSet.remove(likes);
+      this.likesList.remove(likes);
    }
 
 }

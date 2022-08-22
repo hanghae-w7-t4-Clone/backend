@@ -1,6 +1,9 @@
 package com.backend.hanghaew7t4clone.comment;
 
 import com.backend.hanghaew7t4clone.card.Card;
+
+import com.backend.hanghaew7t4clone.exception.CustomException;
+import com.backend.hanghaew7t4clone.exception.ErrorCode;
 import com.backend.hanghaew7t4clone.shared.Check;
 import com.backend.hanghaew7t4clone.member.Member;
 import com.backend.hanghaew7t4clone.shared.Message;
@@ -23,6 +26,7 @@ public class CommentService {
     @Transactional
     public ResponseEntity<?> getAllComment(Long cardId) {
         Card card = check.isPresentCard(cardId);
+        check.cardCheck(card);
         List<Comment> commentsListDto = card.getCommentListDto();
         List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
         for (Comment comment : commentsListDto) {
@@ -34,22 +38,29 @@ public class CommentService {
     @Transactional
     public ResponseEntity<?> createComment(CommentRequestDto commentRequestDto, Long cardId, HttpServletRequest request) {
         Member member = check.validateMember(request);
+        check.memberCheck(member);
         Card card = check.isPresentCard(cardId);
-        check.tokenCheck(request, member);
-        check.cardCheck(member, card);
+        check.cardCheck(card);
+        check.accessTokenCheck(request, member);
         Comment comment = new Comment(commentRequestDto.getContent(), member, card);
         commentRepository.save(comment);
         return new ResponseEntity<>(Message.success("댓글 작성에 성공하셨습니다."), HttpStatus.OK);
     }
 
+    // 코멘트를 적을 때
+
     @Transactional
     public ResponseEntity<?> deleteComment(Long cardId, Long commentId, HttpServletRequest request) {
         Member member = check.validateMember(request);
+        check.memberCheck(member);
         Card card = check.isPresentCard(cardId);
+        check.cardCheck(card);
         Comment comment = check.isPresentComment(commentId);
-        check.tokenCheck(request, member);
-        check.commentCheck(member, card, comment);
+        check.accessTokenCheck(request, member);
+        check.commentCheck(comment);
+        check.commentAuthorCheck(member, comment);
         commentRepository.delete(comment);
         return new ResponseEntity<>(Message.success("댓글 삭제에 성공하셨습니다."), HttpStatus.OK);
+
     }
 }

@@ -11,12 +11,14 @@ public class ReCommentResponseDto {
     private String profilePhoto;
     private String nickname;
     private String content;
+    private int likeCount;
 
     @Builder
-    public ReCommentResponseDto(Long id, String profilePhoto, String nickname, String content) {
+    public ReCommentResponseDto(Long id, String profilePhoto, String nickname, String content, int likeCount) {
         this.id = id;
         this.profilePhoto = profilePhoto;
         this.nickname = nickname;
         this.content = content;
+        this.likeCount = likeCount;
     }
 }
