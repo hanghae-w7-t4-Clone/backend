@@ -3,7 +3,7 @@ package com.backend.hanghaew7t4clone.comment;
 import com.backend.hanghaew7t4clone.card.Card;
 import com.backend.hanghaew7t4clone.card.CardRepository;
 import com.backend.hanghaew7t4clone.card.CardService;
-import com.backend.hanghaew7t4clone.dto.ResponseDto;
+import com.backend.hanghaew7t4clone.shared.ResponseDto;
 import com.backend.hanghaew7t4clone.exception.CustomExceptionCheck;
 import com.backend.hanghaew7t4clone.jwt.TokenProvider;
 import com.backend.hanghaew7t4clone.member.Member;
@@ -64,30 +64,6 @@ public class CommentService {
         commentRepository.delete(comment);
         return ResponseDto.success("삭제 완료");
     }
-
-//    private void cardCheck(Member member, Card card, Comment comment) {
-//        if (null == card) {
-//            throw new CustomException(ErrorCode.CARD_NOT_FOUND);
-//        }
-//        if (!card.getMember().getId().equals(member.getId())) {
-//            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
-//        }
-//        if (!comment.getMember().getId().equals(member.getId())) {
-//            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
-//        }
-//    }
-//
-//    private void tokenCheck(HttpServletRequest request, Member member) {
-//        if (null == request.getHeader("Refresh-Token")) {
-//            throw new CustomException(ErrorCode.REFRESH_TOKEN_IS_EXPIRED);
-//        }
-//        if (null == request.getHeader("Authorization")) {
-//            throw new CustomException(ErrorCode.TOKEN_IS_EXPIRED);
-//        }
-//        if (null == member) {
-//            throw new CustomException(ErrorCode.AUTHOR_NOT_FOUND);
-//        }
-//    }
 
     @Transactional(readOnly = true)
     public Comment isPresentComment(Long id) {

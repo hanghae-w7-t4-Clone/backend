@@ -54,6 +54,7 @@ public class Card extends Timestamped {
 
    @OneToMany(fetch = FetchType.LAZY, mappedBy = "card", cascade = CascadeType.ALL)
    private Set<Likes> likesSet;
+
    @Builder
    public Card(String nickname, List<String> imgUrlList,int likeCount, String content,int commentCount,String place, Member member) {
       this.nickname=nickname;

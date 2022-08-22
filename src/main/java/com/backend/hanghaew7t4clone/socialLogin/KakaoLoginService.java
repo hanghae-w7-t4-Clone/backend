@@ -78,7 +78,7 @@ public class KakaoLoginService {
     private Member registerKakaoMemberIfNeeded(String email) {
         // DB 에 중복된 Kakao Id 가 있는지 확인
         String kakao = "kakao";
-        Member kakaoMember = MemberRepository.findByMembernameAndType(email, kakao)
+        Member kakaoMember = MemberRepository.findByEmailAndType(email, kakao)
             .orElse(null);
         if (kakaoMember == null) {
             // 회원가입
@@ -89,8 +89,14 @@ public class KakaoLoginService {
             String type = "kakao";
 
             String nickname = "";
-            kakaoMember = new Member(email, encodedPassword, nickname, type);
-            MemberRepository.save(kakaoMember);
+            kakaoMember = Member.builder()
+                    .name()
+                    .email()
+                    .nickname()
+                    .phoneNum()
+                    .password()
+                    .build(email, encodedPassword, nickname, type);
+            memberRepository.save(kakaoMember);
         }
 
         return kakaoMember;

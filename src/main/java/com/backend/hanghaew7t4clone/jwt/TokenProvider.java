@@ -1,7 +1,6 @@
 package com.backend.hanghaew7t4clone.jwt;
 
 
-import com.backend.hanghaew7t4clone.dto.ResponseDto;
 import com.backend.hanghaew7t4clone.member.Member;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -83,7 +82,6 @@ public class TokenProvider {
     }
 
     public boolean validateToken(String token) {
-//        String token= Authorization.substring(7);
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;

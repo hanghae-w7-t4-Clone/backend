@@ -1,13 +1,17 @@
 package com.backend.hanghaew7t4clone.socialLogin;
 
 
+import com.backend.hanghaew7t4clone.jwt.TokenProvider;
 import com.backend.hanghaew7t4clone.jwt.UserDetailsImpl;
+import com.backend.hanghaew7t4clone.member.Member;
 import com.backend.hanghaew7t4clone.member.MemberRepository;
+import com.backend.hanghaew7t4clone.shared.Message;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,7 +31,7 @@ public class GoogleLoginService {
     private final com.backend.hanghaew7t4clone.member.MemberRepository MemberRepository;
     private final PasswordEncoder passwordEncoder;
 
-    private final JwtDecoder jwtDecoder;
+    private final TokenProvider tokenProvider;
 
     // token을 이용하여 사용자 정보 획득
     public ResponseEntity login(String jwtToken) {
@@ -43,35 +47,26 @@ public class GoogleLoginService {
         return ResponseEntity.badRequest().body(null);
     }
 
-    private ResponseEntity forceLogin(Member googleMember) {
-        UserDetailsImpl userDetails = new UserDetailsImpl(googleUser);
+    private ResponseEntity<?> forceLogin(Member googleMember) {
+        UserDetailsImpl userDetails = new UserDetailsImpl(googleMember);
         Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
 
         // Token 생성//리프레시 토큰도 생성
-        final String token = JwtTokenUtils.generateAccessToken(userDetails);
-        final String refreshToken = JwtTokenUtils.generaterefreshToken(userDetails);
-        System.out.println("token = " + token);
+        final String token = tokenProvider.generateTokenDto(member);
 
         MemberRepository.save(googleMember);
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization","Bearer "+token);
-        headers.set("RefreshToken","Bearer "+refreshToken);
 
-        //redis에저장
-        refreshRedisService.setValues(refreshToken,String.valueOf(googleMember.getId()));
 
-        return ResponseEntity.ok()
-            .headers(headers)
-            .body(new SocialLoginResponseDto(googleMember));
+        return new ResponseEntity<>(Message.success(null), HttpStatus.OK)
     }
 
 
 
     private Member registerGoogleMemberIfNeeded(String email) {
         String google = "google";
-        Member googleMember = MemberRepository.findByMembernameAndType(email, google).orElse(null);
+        Member googleMember = MemberRepository.findByEmailAndType(email, google).orElse(null);
 
         if (googleMember == null) {
 

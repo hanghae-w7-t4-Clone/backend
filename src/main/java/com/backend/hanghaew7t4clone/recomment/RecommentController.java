@@ -1,6 +1,6 @@
 package com.backend.hanghaew7t4clone.recomment;
 
-import com.backend.hanghaew7t4clone.dto.ResponseDto;
+import com.backend.hanghaew7t4clone.shared.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
