@@ -3,12 +3,16 @@ package com.backend.hanghaew7t4clone.likes;
 
 import com.backend.hanghaew7t4clone.card.Card;
 import com.backend.hanghaew7t4clone.comment.Comment;
-import com.backend.hanghaew7t4clone.dto.ResponseDto;
-import com.backend.hanghaew7t4clone.shared.Check;
+import com.backend.hanghaew7t4clone.exception.CustomException;
+import com.backend.hanghaew7t4clone.exception.ErrorCode;
 import com.backend.hanghaew7t4clone.member.Member;
 import com.backend.hanghaew7t4clone.recomment.ReComment;
+import com.backend.hanghaew7t4clone.shared.Check;
+import com.backend.hanghaew7t4clone.shared.Message;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,14 +23,14 @@ import javax.servlet.http.HttpServletRequest;
 @Service
 @RequiredArgsConstructor
 public class LikesService {
-
+private final Check check;
 private final LikesRepository likesRepository;
 
     @Transactional
     public ResponseEntity<?> pushCardLikes(Long cardId, HttpServletRequest request) {
-        Member member = customExceptionCheck.validateMember(request);
-        customExceptionCheck.tokenCheck(request,member);
-        Card card = customExceptionCheck.isPresentCard(cardId);
+        Member member = check.validateMember(request);
+        check.tokenCheck(request,member);
+        Card card = check.isPresentCard(cardId);
         if(card==null){throw new CustomException(ErrorCode.CARD_NOT_FOUND);}
         Likes likesToCardByMember = likesRepository.findByCardAndMember(card, member).orElse(null);
         LikesResponseDto likesResponseDto = likeStatus(likesToCardByMember, member, card,null,null);
@@ -48,7 +52,7 @@ private final LikesRepository likesRepository;
 
     @Transactional
 
-    public ResponseDto<?> pushReCommentLikes(Long id, HttpServletRequest request) {
+    public ResponseEntity<?> pushReCommentLikes(Long id, HttpServletRequest request) {
         Member member = check.validateMember(request);
         check.tokenCheck(request,member);
         ReComment reComment = check.isPresentReComment(id);

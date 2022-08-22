@@ -92,7 +92,7 @@ public class CardService {
       List<CardResponseDto> responseDtoList = new ArrayList<>();
       for (Card card : cards) {
          List<CommentResponseDto> commentList = new ArrayList<>();
-         List<Comment> comments = commentRepository.findTop2ByCardOrderByLikesSet(card);
+         List<Comment> comments = commentRepository.findTop2ByCardOrderByLikesList(card);
          for (Comment comment : comments) {
             commentList.add(
                     CommentResponseDto.builder()
