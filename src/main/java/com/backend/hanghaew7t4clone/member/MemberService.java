@@ -119,10 +119,10 @@ public class MemberService {
         if (refreshTokenConfirm == null) {
             throw new CustomException(ErrorCode.INVALID_TOKEN);
         }
-        LocalDateTime currentDateTime = LocalDateTime.now();
-        if (!refreshTokenConfirm.getCreatedAt().plusHours(3).equals(currentDateTime)) {
-            throw new CustomException(ErrorCode.REFRESH_TOKEN_IS_EXPIRED);
-        }
+//        LocalDateTime currentDateTime = LocalDateTime.now();
+//        if (!refreshTokenConfirm.getCreatedAt().plusHours(3).equals(currentDateTime)) {
+//            throw new CustomException(ErrorCode.REFRESH_TOKEN_IS_EXPIRED);
+//        }//refresh token repiredate
         if (Objects.equals(refreshTokenConfirm.getValue(), request.getHeader("Refresh-Token"))) {
             TokenDto tokenDto = tokenProvider.generateTokenDto(requestingMember);
             accessTokenToHeaders(tokenDto, response);

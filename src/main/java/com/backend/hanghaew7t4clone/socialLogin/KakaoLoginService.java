@@ -78,8 +78,7 @@ public class KakaoLoginService {
     private Member registerKakaoMemberIfNeeded(String email) {
         // DB 에 중복된 Kakao Id 가 있는지 확인
         String kakao = "kakao";
-        Member kakaoMember = MemberRepository.findByEmailAndType(email, kakao)
-            .orElse(null);
+        Member kakaoMember = memberRepository.findByEmailAndType(email, kakao).orElse(null);
         if (kakaoMember == null) {
             // 회원가입
 
