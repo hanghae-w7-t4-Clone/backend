@@ -70,9 +70,11 @@ public class MemberService {
             throw new CustomException(ErrorCode.INVALID_MEMBER_INFO);
         }
         String nickname =member.getNickname();
+        String photoUrl = member.getProfilePhoto();
+        LoginResponseDto loginResponseDto = new LoginResponseDto(nickname,photoUrl);
         TokenDto tokenDto = tokenProvider.generateTokenDto(member);
         tokenToHeaders(tokenDto, response);
-        return new ResponseEntity<>(Message.success(nickname),HttpStatus.OK);
+        return new ResponseEntity<>(Message.success(loginResponseDto),HttpStatus.OK);
     }
 
 
@@ -119,10 +121,8 @@ public class MemberService {
         if (refreshTokenConfirm == null) {
             throw new CustomException(ErrorCode.INVALID_TOKEN);
         }
-//        LocalDateTime currentDateTime = LocalDateTime.now();
-//        if (!refreshTokenConfirm.getCreatedAt().plusHours(3).equals(currentDateTime)) {
-//            throw new CustomException(ErrorCode.REFRESH_TOKEN_IS_EXPIRED);
-//        }//refresh token repiredate
+
+        //refresh token expiredate
         if (Objects.equals(refreshTokenConfirm.getValue(), request.getHeader("Refresh-Token"))) {
             TokenDto tokenDto = tokenProvider.generateTokenDto(requestingMember);
             accessTokenToHeaders(tokenDto, response);

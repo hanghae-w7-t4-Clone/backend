@@ -82,6 +82,7 @@ public class TokenProvider {
         }
         return ((UserDetailsImpl) authentication.getPrincipal()).getMember();
     }
+    
 
     public boolean validateToken(String token) {
         try {

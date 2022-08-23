@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class GoogleLoginController {
 
-    private final GoogleLoginService googleLoginService;
-
-    //tokenId를 받아야함.
-    @PostMapping(value = "/api/login/google")
-    public ResponseEntity googleLogin(@RequestBody SocialLoginRequestDto socialLoginRequestDto) {
-        return googleLoginService.login(socialLoginRequestDto.getJwtToken());
-    }
+//    private final GoogleLoginService googleLoginService;
+//
+//    //tokenId를 받아야함.
+//    @PostMapping(value = "/api/login/google")
+//    public ResponseEntity googleLogin(@RequestBody SocialLoginRequestDto socialLoginRequestDto) {
+//        return googleLoginService.login(socialLoginRequestDto.getJwtToken());
+//    }
 
 
 }

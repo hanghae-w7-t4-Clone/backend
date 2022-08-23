@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class KakaoLoginController {
 
-    private final KakaoLoginService kakoLoginService;
-
-    @PostMapping(value = "/api/login/kakao")
-    public ResponseEntity kakaoLogin(@RequestBody SocialLoginRequestDto socialLoginRequestDto) {
-        return kakoLoginService.login(socialLoginRequestDto.getJwtToken());
-    }
+//    private final KakaoLoginService kakoLoginService;
+//
+//    @PostMapping(value = "/api/login/kakao")
+//    public ResponseEntity kakaoLogin(@RequestBody SocialLoginRequestDto socialLoginRequestDto) {
+//        return kakoLoginService.login(socialLoginRequestDto.getJwtToken());
+//    }
 }
