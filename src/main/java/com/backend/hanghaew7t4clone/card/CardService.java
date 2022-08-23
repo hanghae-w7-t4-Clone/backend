@@ -3,6 +3,7 @@ package com.backend.hanghaew7t4clone.card;
 import com.backend.hanghaew7t4clone.comment.Comment;
 import com.backend.hanghaew7t4clone.comment.CommentRepository;
 import com.backend.hanghaew7t4clone.comment.CommentResponseDto;
+import com.backend.hanghaew7t4clone.comment.CommentService;
 import com.backend.hanghaew7t4clone.member.Member;
 import com.backend.hanghaew7t4clone.shared.Check;
 import com.backend.hanghaew7t4clone.shared.Message;
@@ -24,6 +25,7 @@ public class CardService {
    private final CardRepository cardRepository;
    private final CommentRepository commentRepository;
    private final Check check;
+   private final CommentService commentService;
 
 
    @Transactional
@@ -60,12 +62,7 @@ public class CardService {
    @Transactional(readOnly = true)
    public ResponseEntity<?> getCard(Long id) {
       Card card = check.isPresentCard(id);
-      check.cardCheck(card);
-      List<Comment> commentsListDto = card.getCommentListDto();
-      List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
-      for (Comment comment : commentsListDto) {
-         commentResponseDtoList.add(comment.getAllCommentDto());
-      }
+      List<CommentResponseDto> commentResponseDtoList = commentService.getCommentResponseDtoList(card);
       return new ResponseEntity<>(Message.success(
               CardResponseDto.builder()
                       .id(card.getId())
@@ -80,6 +77,7 @@ public class CardService {
                       .build()
       ), HttpStatus.OK);
    }
+
 
 
    @Transactional(readOnly = true)
