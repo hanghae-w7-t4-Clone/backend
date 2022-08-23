@@ -7,6 +7,7 @@ import com.backend.hanghaew7t4clone.jwt.RefreshToken;
 import com.backend.hanghaew7t4clone.jwt.RefreshTokenRepository;
 import com.backend.hanghaew7t4clone.jwt.TokenDto;
 import com.backend.hanghaew7t4clone.jwt.TokenProvider;
+import com.backend.hanghaew7t4clone.shared.Check;
 import com.backend.hanghaew7t4clone.shared.Message;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -113,6 +114,10 @@ public class MemberService {
         if (null == request.getHeader("Refresh-Token")) {
             throw new CustomException(ErrorCode.INVALID_TOKEN);
         }
+       tokenProvider.validateToken(request.getHeader("Refresh-Token"));
+        if (!tokenProvider.tokenCheck(request.getHeader("Authorization"))){
+            throw new CustomException(ErrorCode.INVALID_MEMBER_INFO);
+        }
         Member requestingMember = memberRepository.findByNickname(nickname).orElse(null);
         if (requestingMember == null) {
             throw new CustomException(ErrorCode.INVALID_MEMBER_INFO);
@@ -121,7 +126,6 @@ public class MemberService {
         if (refreshTokenConfirm == null) {
             throw new CustomException(ErrorCode.INVALID_TOKEN);
         }
-
         //refresh token expiredate
         if (Objects.equals(refreshTokenConfirm.getValue(), request.getHeader("Refresh-Token"))) {
             TokenDto tokenDto = tokenProvider.generateTokenDto(requestingMember);

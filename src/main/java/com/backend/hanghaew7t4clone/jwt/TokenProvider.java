@@ -82,16 +82,16 @@ public class TokenProvider {
         }
         return ((UserDetailsImpl) authentication.getPrincipal()).getMember();
     }
-    
+
 
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch (SecurityException | MalformedJwtException e) {
-            throw new CustomException(ErrorCode.INVALID_TOKEN);
+            log.info("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
         } catch (ExpiredJwtException e) {
-            throw new CustomException(ErrorCode.TOKEN_IS_EXPIRED);
+            log.info("Expired JWT token, 만료된 JWT token 입니다.");
         } catch (UnsupportedJwtException e) {
             log.info("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.");
         } catch (IllegalArgumentException e) {
@@ -99,6 +99,18 @@ public class TokenProvider {
         }
         return false;
     }
+
+    public boolean tokenCheck(String token) {
+        try {
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            return false;
+        } catch (SecurityException | MalformedJwtException e) {
+            return false;
+        } catch (ExpiredJwtException e) {
+            return true;
+        }
+    }
+
 
     @Transactional(readOnly = true)
     public RefreshToken isPresentRefreshToken(Member member) {
