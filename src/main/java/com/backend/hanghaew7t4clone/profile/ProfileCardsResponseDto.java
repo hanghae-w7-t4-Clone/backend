@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.util.Set;
 
 @Builder
 @Getter
@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ProfileCardsResponseDto {
    private Long id;
-   private List<String> imgUrlList;
+   private Set<String> imgUrlList;
    private int likeCount;
    private int commentCount;
    private int photoCount;

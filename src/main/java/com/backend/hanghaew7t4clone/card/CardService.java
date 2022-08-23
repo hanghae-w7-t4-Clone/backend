@@ -4,6 +4,7 @@ import com.backend.hanghaew7t4clone.comment.Comment;
 import com.backend.hanghaew7t4clone.comment.CommentRepository;
 import com.backend.hanghaew7t4clone.comment.CommentResponseDto;
 import com.backend.hanghaew7t4clone.comment.CommentService;
+import com.backend.hanghaew7t4clone.likes.LikeCountSort;
 import com.backend.hanghaew7t4clone.member.Member;
 import com.backend.hanghaew7t4clone.shared.Check;
 import com.backend.hanghaew7t4clone.shared.Message;
@@ -86,7 +87,9 @@ public class CardService {
       List<CardResponseDto> responseDtoList = new ArrayList<>();
       for (Card card : cards) {
          List<CommentResponseDto> commentList = new ArrayList<>();
-         List<Comment> comments = commentRepository.findTop2ByCardOrderByLikeCountDesc(card);
+         List<Comment> comments = card.getCommentListDto();
+         comments.sort(new LikeCountSort());
+         int cnt=0;
          for (Comment comment : comments) {
             commentList.add(
                     CommentResponseDto.builder()
@@ -96,8 +99,9 @@ public class CardService {
                             .content(comment.getContent())
                             .likeCount(comment.getLikeCount())
                             .build());
+            cnt++;
+            if (cnt>=2) break;
          }
-
          responseDtoList.add(
                  CardResponseDto.builder()
                          .id(card.getId())
@@ -126,6 +130,7 @@ public class CardService {
       card.update(requestDto);
       return new ResponseEntity<>(Message.success(card), HttpStatus.OK);
    }
+
 
    @Transactional
    public ResponseEntity<?> deleteCard(Long id, HttpServletRequest request) {
