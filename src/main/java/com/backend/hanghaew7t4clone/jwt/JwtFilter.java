@@ -42,7 +42,7 @@ public class JwtFilter extends OncePerRequestFilter {
     private final UserDetailsServiceImpl userDetailsService;
 
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-                                    FilterChain filteChain)
+                                    FilterChain filterChain)
             throws IOException, ServletException {
 
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
@@ -81,7 +81,7 @@ public class JwtFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
-        filteChain.doFilter(request, response);
+        filterChain.doFilter(request, response);
     }
     private String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);

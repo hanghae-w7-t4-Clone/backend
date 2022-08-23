@@ -1,16 +1,15 @@
 package com.backend.hanghaew7t4clone.comment;
 
 import com.backend.hanghaew7t4clone.card.Card;
-
-import com.backend.hanghaew7t4clone.card.CardRepository;
-import com.backend.hanghaew7t4clone.shared.Check;
 import com.backend.hanghaew7t4clone.member.Member;
+import com.backend.hanghaew7t4clone.shared.Check;
 import com.backend.hanghaew7t4clone.shared.Message;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;

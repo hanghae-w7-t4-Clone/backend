@@ -8,6 +8,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 import java.util.List;
@@ -47,6 +48,7 @@ public class Card extends Timestamped {
    private Member member;
 
    @Column
+   @BatchSize(size = 10)
    @OneToMany(mappedBy = "card",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
    private List<Comment> commentListDto;
 

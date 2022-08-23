@@ -1,6 +1,8 @@
 package com.backend.hanghaew7t4clone.jwt;
 
 
+import com.backend.hanghaew7t4clone.exception.CustomException;
+import com.backend.hanghaew7t4clone.exception.ErrorCode;
 import com.backend.hanghaew7t4clone.member.Member;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -81,6 +83,7 @@ public class TokenProvider {
         return ((UserDetailsImpl) authentication.getPrincipal()).getMember();
     }
 
+
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
@@ -96,6 +99,18 @@ public class TokenProvider {
         }
         return false;
     }
+
+    public boolean tokenCheck(String token) {
+        try {
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            return false;
+        } catch (SecurityException | MalformedJwtException e) {
+            return false;
+        } catch (ExpiredJwtException e) {
+            return true;
+        }
+    }
+
 
     @Transactional(readOnly = true)
     public RefreshToken isPresentRefreshToken(Member member) {

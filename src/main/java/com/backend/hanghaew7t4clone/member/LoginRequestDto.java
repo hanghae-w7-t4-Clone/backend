@@ -1,12 +1,12 @@
 package com.backend.hanghaew7t4clone.member;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 
 @Getter
-@NoArgsConstructor
+@AllArgsConstructor
 public class LoginRequestDto {
     @NotBlank
     private String loginId;
@@ -14,8 +14,4 @@ public class LoginRequestDto {
     @NotBlank
     private String password;
 
-    public LoginRequestDto(String loginId, String password){
-        this.loginId = loginId;
-        this.password =password;
-    }
 }

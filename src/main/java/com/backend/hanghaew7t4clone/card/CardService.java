@@ -1,7 +1,6 @@
 package com.backend.hanghaew7t4clone.card;
 
 import com.backend.hanghaew7t4clone.comment.Comment;
-import com.backend.hanghaew7t4clone.comment.CommentRepository;
 import com.backend.hanghaew7t4clone.comment.CommentResponseDto;
 import com.backend.hanghaew7t4clone.comment.CommentService;
 import com.backend.hanghaew7t4clone.likes.LikeCountSort;
@@ -24,7 +23,6 @@ import java.util.List;
 public class CardService {
 
    private final CardRepository cardRepository;
-   private final CommentRepository commentRepository;
    private final Check check;
    private final CommentService commentService;
 
@@ -80,7 +78,6 @@ public class CardService {
    }
 
 
-
    @Transactional(readOnly = true)
    public ResponseEntity<?> getAllCard() {
       List<Card> cards = cardRepository.findAllByOrderByCreatedAtDesc();
@@ -130,7 +127,6 @@ public class CardService {
       card.update(requestDto);
       return new ResponseEntity<>(Message.success(card), HttpStatus.OK);
    }
-
 
    @Transactional
    public ResponseEntity<?> deleteCard(Long id, HttpServletRequest request) {

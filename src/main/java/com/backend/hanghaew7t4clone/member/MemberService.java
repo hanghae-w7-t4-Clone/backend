@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -70,9 +69,11 @@ public class MemberService {
             throw new CustomException(ErrorCode.INVALID_MEMBER_INFO);
         }
         String nickname =member.getNickname();
+        String photoUrl = member.getProfilePhoto();
+        LoginResponseDto loginResponseDto = new LoginResponseDto(nickname,photoUrl);
         TokenDto tokenDto = tokenProvider.generateTokenDto(member);
         tokenToHeaders(tokenDto, response);
-        return new ResponseEntity<>(Message.success(nickname),HttpStatus.OK);
+        return new ResponseEntity<>(Message.success(loginResponseDto),HttpStatus.OK);
     }
 
 
@@ -111,6 +112,10 @@ public class MemberService {
         if (null == request.getHeader("Refresh-Token")) {
             throw new CustomException(ErrorCode.INVALID_TOKEN);
         }
+       tokenProvider.validateToken(request.getHeader("Refresh-Token"));
+        if (tokenProvider.tokenCheck(request.getHeader("Access-Token-Expire-Time"))){
+            throw new CustomException(ErrorCode.INVALID_MEMBER_INFO);//힌트를 얻었다
+        }// 좋지 않은 코드
         Member requestingMember = memberRepository.findByNickname(nickname).orElse(null);
         if (requestingMember == null) {
             throw new CustomException(ErrorCode.INVALID_MEMBER_INFO);
@@ -118,10 +123,6 @@ public class MemberService {
         RefreshToken refreshTokenConfirm = refreshTokenRepository.findByMember(requestingMember).orElse(null);
         if (refreshTokenConfirm == null) {
             throw new CustomException(ErrorCode.INVALID_TOKEN);
-        }
-        LocalDateTime currentDateTime = LocalDateTime.now();
-        if (!refreshTokenConfirm.getCreatedAt().plusHours(3).equals(currentDateTime)) {
-            throw new CustomException(ErrorCode.REFRESH_TOKEN_IS_EXPIRED);
         }
         if (Objects.equals(refreshTokenConfirm.getValue(), request.getHeader("Refresh-Token"))) {
             TokenDto tokenDto = tokenProvider.generateTokenDto(requestingMember);

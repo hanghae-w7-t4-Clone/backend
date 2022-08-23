@@ -1,8 +1,12 @@
 package com.backend.hanghaew7t4clone.member;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class MemberRequestDto {
     private String nickname;
 
@@ -12,13 +16,4 @@ public class MemberRequestDto {
 
     private String loginId;
 
-    public MemberRequestDto(){}
-
-    public MemberRequestDto(String nickname, String password, String name, String loginId){
-        this.nickname=nickname;
-        this.password=password;
-        this.name=name;
-        this.loginId=loginId;
-
-    }
 }
