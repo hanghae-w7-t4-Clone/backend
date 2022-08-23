@@ -15,6 +15,7 @@ public enum ErrorCode {
     INVALID_TOKEN(HttpStatus.BAD_REQUEST.value(), "M005", "유효하지 않은 토큰 입니다."),
     DUPLICATED_NICKNAME(HttpStatus.BAD_REQUEST.value(),"M006","이미 사용되고 있는 닉네임입니다."),
     INVALID_MEMBER_INFO(HttpStatus.BAD_REQUEST.value(),"M007" ,"잘못된 사용자 정보입니다."),
+    UNAUTHORIZED(HttpStatus.BAD_REQUEST.value(),"M008" ,"로그인이 필요합니다."),
 
 
     //CARD

@@ -4,13 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class CardRequestDto {
   private String content;
-  private List<String> imgUrlList;
+  private Set<String> imgUrlList;
   private String place;
 }

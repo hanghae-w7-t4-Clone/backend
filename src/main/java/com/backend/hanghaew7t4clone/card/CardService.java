@@ -1,8 +1,9 @@
 package com.backend.hanghaew7t4clone.card;
 
 import com.backend.hanghaew7t4clone.comment.Comment;
-import com.backend.hanghaew7t4clone.comment.CommentRepository;
 import com.backend.hanghaew7t4clone.comment.CommentResponseDto;
+import com.backend.hanghaew7t4clone.comment.CommentService;
+import com.backend.hanghaew7t4clone.likes.LikeCountSort;
 import com.backend.hanghaew7t4clone.member.Member;
 import com.backend.hanghaew7t4clone.shared.Check;
 import com.backend.hanghaew7t4clone.shared.Message;
@@ -22,8 +23,8 @@ import java.util.List;
 public class CardService {
 
    private final CardRepository cardRepository;
-   private final CommentRepository commentRepository;
    private final Check check;
+   private final CommentService commentService;
 
 
    @Transactional
@@ -60,12 +61,7 @@ public class CardService {
    @Transactional(readOnly = true)
    public ResponseEntity<?> getCard(Long id) {
       Card card = check.isPresentCard(id);
-      check.cardCheck(card);
-      List<Comment> commentsListDto = card.getCommentListDto();
-      List<CommentResponseDto> commentResponseDtoList = new ArrayList<>(); //가장 적은 원소의 인덱스
-      for (Comment comment : commentsListDto) {
-         commentResponseDtoList.add(comment.getAllCommentDto());
-      }
+      List<CommentResponseDto> commentResponseDtoList = commentService.getCommentResponseDtoList(card);
       return new ResponseEntity<>(Message.success(
               CardResponseDto.builder()
                       .id(card.getId())
@@ -88,8 +84,9 @@ public class CardService {
       List<CardResponseDto> responseDtoList = new ArrayList<>();
       for (Card card : cards) {
          List<CommentResponseDto> commentList = new ArrayList<>();
-         List<Comment>comments=card.getCommentListDto();
-//         List<Comment> comments = commentRepository.findTop2ByCardOrderByLikeCountDesc(card);
+         List<Comment> comments = card.getCommentListDto();
+         comments.sort(new LikeCountSort());
+         int cnt=0;
          for (Comment comment : comments) {
             commentList.add(
                     CommentResponseDto.builder()
@@ -99,8 +96,9 @@ public class CardService {
                             .content(comment.getContent())
                             .likeCount(comment.getLikeCount())
                             .build());
+            cnt++;
+            if (cnt>=2) break;
          }
-
          responseDtoList.add(
                  CardResponseDto.builder()
                          .id(card.getId())

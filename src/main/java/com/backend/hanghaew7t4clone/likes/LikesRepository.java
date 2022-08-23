@@ -13,8 +13,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface LikesRepository extends JpaRepository<Likes, Long> {
-    Optional<Likes> findById(Long id);
-
     @Query("select DISTINCT m from Likes m where (m.card in :card) And (m.member in :member)")
     Optional<Likes> findByCardAndMember(@Param("card") Card card, @Param("member") Member member);
 

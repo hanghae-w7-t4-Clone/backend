@@ -7,7 +7,6 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.backend.hanghaew7t4clone.exception.CustomException;
 import com.backend.hanghaew7t4clone.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,7 +21,7 @@ public class FileService {
    @Value("${bucketName}")
    private String S3Bucket; // Bucket 이름
 
-   @Autowired
+
    AmazonS3Client amazonS3Client;
    public List<String> getImgUrlList(MultipartFile[] multipartFileList) throws IOException {
       List<String> imagePathList = new ArrayList<>();

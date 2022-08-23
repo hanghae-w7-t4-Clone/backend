@@ -17,7 +17,8 @@ public class Message {
    public static Message fail(String code,String message){
       return new Message(false,null,new Error(code, message));
 }
-@Getter
+
+   @Getter
    @AllArgsConstructor
    static class Error {
       private String code;

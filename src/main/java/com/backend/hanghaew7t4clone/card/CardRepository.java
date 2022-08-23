@@ -8,8 +8,7 @@ import java.util.List;
 
 public interface CardRepository extends JpaRepository<Card, Long> {
   List<Card> findAllByMember(Member member);
-
-  @Query("select distinct m from Card m join fetch m.member join fetch m.imgUrlList left join m.commentListDto order by m.createdAt DESC ")
+  @Query("select distinct m from Card m join fetch m.member join fetch m.imgUrlList left join fetch m.commentListDto order by m.createdAt DESC ")
   List<Card> findAllByOrderByCreatedAtDesc();
 
 }

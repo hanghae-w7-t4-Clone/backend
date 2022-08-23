@@ -1,7 +1,6 @@
 package com.backend.hanghaew7t4clone.member;
 
 
-import com.backend.hanghaew7t4clone.shared.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
