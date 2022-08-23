@@ -69,10 +69,10 @@ public class Card extends Timestamped {
       this.member = member;
    }
 
-   public void update(CardRequestDto postRequestDto) {
-      this.content = postRequestDto.getContent();
-      this.imgUrlList=postRequestDto.getImgUrlList();
-      this.place= postRequestDto.getPlace();
+   public void update(CardRequestDto requestDto) {
+      if(requestDto.getContent()!=null)this.content = requestDto.getContent();
+      if(requestDto.getImgUrlList()!=null)this.imgUrlList=requestDto.getImgUrlList();
+      if(requestDto.getPlace()!=null) this.place= requestDto.getPlace();
    }
    public void updateComment(int commentCount){
       this.commentCount=commentCount;
