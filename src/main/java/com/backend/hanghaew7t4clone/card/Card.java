@@ -4,7 +4,6 @@ import com.backend.hanghaew7t4clone.comment.Comment;
 import com.backend.hanghaew7t4clone.likes.Likes;
 import com.backend.hanghaew7t4clone.member.Member;
 import com.backend.hanghaew7t4clone.shared.Timestamped;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,7 +28,7 @@ public class Card extends Timestamped {
 
    @Column
    @ElementCollection(targetClass = String.class)
-   private List<String> imgUrlList;
+   private Set<String> imgUrlList;
 
    @Column
    private int likeCount;
@@ -45,7 +44,6 @@ public class Card extends Timestamped {
 
    @ManyToOne
    @JoinColumn(name = "member_id")
-   @JsonIgnore
    private Member member;
 
    @Column
@@ -56,7 +54,7 @@ public class Card extends Timestamped {
    private List<Likes> likesList;
 
    @Builder
-   public Card(String nickname, List<String> imgUrlList,int likeCount, String content,int commentCount,String place, Member member) {
+   public Card(String nickname, Set<String> imgUrlList,int likeCount, String content,int commentCount,String place, Member member) {
       this.nickname=nickname;
       this.imgUrlList=imgUrlList;
       this.likeCount=likeCount;

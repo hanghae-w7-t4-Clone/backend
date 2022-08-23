@@ -6,6 +6,5 @@ import java.util.List;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findAllByCard(Card card);
-    List<Comment> findTop2ByCardOrderByLikeCountDesc(Card card);
 
     }

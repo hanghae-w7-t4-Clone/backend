@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Builder
 @Getter
@@ -16,7 +17,7 @@ import java.util.List;
 public class CardResponseDto {
    private Long id;
    private String nickname;
-   private List<String> imgUrlList;
+   private Set<String> imgUrlList;
    private int likeCount;
    private String content;
    private int commentCount;

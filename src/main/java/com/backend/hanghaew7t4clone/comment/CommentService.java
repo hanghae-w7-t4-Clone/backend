@@ -20,20 +20,15 @@ import java.util.List;
 public class CommentService {
 
     private final CommentRepository commentRepository;
-    private final CardRepository cardRepository;
     private final Check check;
 
     @Transactional
     public ResponseEntity<?> getAllComment(Long cardId) {
         Card card = check.isPresentCard(cardId);
-        check.cardCheck(card);
-        List<Comment> commentsListDto = card.getCommentListDto();
-        List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
-        for (Comment comment : commentsListDto) {
-            commentResponseDtoList.add(comment.getAllCommentDto());
-        }
+        List<CommentResponseDto> commentResponseDtoList = getCommentResponseDtoList(card);
         return new ResponseEntity<>(Message.success(commentResponseDtoList), HttpStatus.OK);
     }
+
 
     @Transactional
     public ResponseEntity<?> createComment(CommentRequestDto commentRequestDto, Long cardId, HttpServletRequest request) {
@@ -64,5 +59,15 @@ public class CommentService {
         commentRepository.delete(comment);
         return new ResponseEntity<>(Message.success("댓글 삭제에 성공하셨습니다."), HttpStatus.OK);
 
+    }
+
+    public List<CommentResponseDto> getCommentResponseDtoList(Card card) {
+        check.cardCheck(card);
+        List<Comment> commentsListDto = card.getCommentListDto();
+        List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
+        for (Comment comment : commentsListDto) {
+            commentResponseDtoList.add(comment.getAllCommentDto());
+        }
+        return commentResponseDtoList;
     }
 }
