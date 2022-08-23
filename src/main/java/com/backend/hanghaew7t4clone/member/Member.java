@@ -71,15 +71,15 @@ public class Member extends Timestamped {
     }
 
     @Builder
-    public Member(String email, String name, String password,String profilePhoto) {
+    public Member(String email, String name, String password,String profilePhoto, String nickname, String type) {
         this.id = getId();
         this.email = email;
         this.name = name;
-        this.nickname = email;
+        this.nickname = nickname;
         this.password = password;
         this.content = " ";
         this.profilePhoto =profilePhoto;
-        this.type ="kakao";
+        this.type =type;
     }
 
 
