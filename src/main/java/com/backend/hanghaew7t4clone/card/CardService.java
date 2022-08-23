@@ -62,7 +62,7 @@ public class CardService {
       Card card = check.isPresentCard(id);
       check.cardCheck(card);
       List<Comment> commentsListDto = card.getCommentListDto();
-      List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
+      List<CommentResponseDto> commentResponseDtoList = new ArrayList<>(); //가장 적은 원소의 인덱스
       for (Comment comment : commentsListDto) {
          commentResponseDtoList.add(comment.getAllCommentDto());
       }

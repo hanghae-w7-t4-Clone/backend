@@ -7,7 +7,6 @@ import com.backend.hanghaew7t4clone.jwt.RefreshToken;
 import com.backend.hanghaew7t4clone.jwt.RefreshTokenRepository;
 import com.backend.hanghaew7t4clone.jwt.TokenDto;
 import com.backend.hanghaew7t4clone.jwt.TokenProvider;
-import com.backend.hanghaew7t4clone.shared.Check;
 import com.backend.hanghaew7t4clone.shared.Message;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -115,9 +113,9 @@ public class MemberService {
             throw new CustomException(ErrorCode.INVALID_TOKEN);
         }
        tokenProvider.validateToken(request.getHeader("Refresh-Token"));
-        if (!tokenProvider.tokenCheck(request.getHeader("Authorization"))){
-            throw new CustomException(ErrorCode.INVALID_MEMBER_INFO);
-        }
+        if (tokenProvider.tokenCheck(request.getHeader("Access-Token-Expire-Time"))){
+            throw new CustomException(ErrorCode.INVALID_MEMBER_INFO);//힌트를 얻었다
+        }// 좋지 않은 코드
         Member requestingMember = memberRepository.findByNickname(nickname).orElse(null);
         if (requestingMember == null) {
             throw new CustomException(ErrorCode.INVALID_MEMBER_INFO);
@@ -126,7 +124,6 @@ public class MemberService {
         if (refreshTokenConfirm == null) {
             throw new CustomException(ErrorCode.INVALID_TOKEN);
         }
-        //refresh token expiredate
         if (Objects.equals(refreshTokenConfirm.getValue(), request.getHeader("Refresh-Token"))) {
             TokenDto tokenDto = tokenProvider.generateTokenDto(requestingMember);
             accessTokenToHeaders(tokenDto, response);

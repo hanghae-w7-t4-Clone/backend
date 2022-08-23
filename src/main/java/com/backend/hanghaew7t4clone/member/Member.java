@@ -34,7 +34,7 @@ public class Member extends Timestamped {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(unique = true)
     private String nickname;
     @Column(nullable = false)
     @JsonIgnore
@@ -53,21 +53,9 @@ public class Member extends Timestamped {
     @Column(nullable = false)
     private String type;
 
-
-
     @Column(nullable = false)
     private String profilePhoto;
 
-    public Member(String email, String phoneNum, String name, String nickname, String password, String content, String profilePhoto) {
-        this.id = getId();
-        this.email = email;
-        this.phoneNum = phoneNum;
-        this.name = name;
-        this.nickname = nickname;
-        this.password = password;
-        this.content = content;
-        this.profilePhoto = profilePhoto;
-    }
 
     @Builder
     public Member(String email, String name, String nickname, String password, String phoneNum) {
@@ -81,6 +69,20 @@ public class Member extends Timestamped {
         this.profilePhoto ="https://springbucketss.s3.ap-northeast-2.amazonaws.com/basicprofile.png";
         this.type ="general";
     }
+
+    @Builder
+    public Member(String email, String name, String password,String profilePhoto) {
+        this.id = getId();
+        this.email = email;
+        this.name = name;
+        this.nickname = email;
+        this.password = password;
+        this.content = " ";
+        this.profilePhoto =profilePhoto;
+        this.type ="kakao";
+    }
+
+
 
 
     public boolean validatePassword(PasswordEncoder passwordEncoder, String password){
