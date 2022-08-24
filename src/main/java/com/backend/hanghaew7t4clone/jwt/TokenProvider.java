@@ -1,8 +1,6 @@
 package com.backend.hanghaew7t4clone.jwt;
 
 
-import com.backend.hanghaew7t4clone.exception.CustomException;
-import com.backend.hanghaew7t4clone.exception.ErrorCode;
 import com.backend.hanghaew7t4clone.member.Member;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -100,17 +98,6 @@ public class TokenProvider {
         return false;
     }
 
-    public boolean tokenCheck(String token) {
-        try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-            return false;
-        } catch (SecurityException | MalformedJwtException e) {
-            return false;
-        } catch (ExpiredJwtException e) {
-            return true;
-        }
-    }
-
 
     @Transactional(readOnly = true)
     public RefreshToken isPresentRefreshToken(Member member) {
@@ -122,6 +109,25 @@ public class TokenProvider {
     public void deleteRefreshToken(Member member) {
         RefreshToken refreshToken = isPresentRefreshToken(member);
         refreshTokenRepository.delete(refreshToken);
+    }
+
+    public TokenDto generateAccessTokenDto(Member member) {
+        long now = (new Date().getTime());
+
+        Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
+        String accessToken = Jwts.builder()
+                .setSubject(member.getNickname())
+                .claim(AUTHORITIES_KEY, ROLE_MEMBER.toString())
+                .setExpiration(accessTokenExpiresIn)
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+        String refreshToken = refreshTokenRepository.findByMember(member).get().getValue();
+        return TokenDto.builder()
+                .grantType(BEARER_PREFIX)
+                .accessToken(accessToken)
+                .accessTokenExpiresIn(accessTokenExpiresIn.getTime())
+                .refreshToken(refreshToken)
+                .build();
     }
 
 }
