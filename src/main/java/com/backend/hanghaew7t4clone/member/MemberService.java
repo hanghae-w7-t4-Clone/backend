@@ -120,7 +120,7 @@ public class MemberService {
 
         RefreshToken refreshTokenConfirm = refreshTokenRepository.findByMember(requestingMember).orElse(null);
         if (refreshTokenConfirm == null) {
-            throw new CustomException(ErrorCode.INVALID_TOKEN);
+            throw new CustomException(ErrorCode.REFRESH_TOKEN_IS_EXPIRED);
         }
         if (Objects.equals(refreshTokenConfirm.getValue(), request.getHeader("Refresh-Token"))) {
             TokenDto tokenDto = tokenProvider.generateAccessTokenDto(requestingMember);
