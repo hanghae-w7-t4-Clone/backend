@@ -23,6 +23,7 @@ public enum ErrorCode {
 
     //COMMENT
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "CM001", "해당 댓글을 찾을 수 없습니다."),
+    CONTENT_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "CM002", "해당 댓글의 메시지가 비어있습니다."),
 
     //SUB-COMMENT
     SUB_COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND.value(), "CM001", "해당 대댓글을 찾을 수 없습니다."),
