@@ -60,15 +60,11 @@ public class SecurityConfiguration {
 
                 .and()
                 .authorizeRequests()
-
-//                .antMatchers("/users/**").permitAll()
-//                .antMatchers("/cards/**").permitAll()
-//                .antMatchers("/comments/**").permitAll()
-//                .antMatchers("/profiles/**").permitAll()
-                .antMatchers("/**").permitAll()
+                .antMatchers("/users/**").permitAll()
+                .antMatchers("/cards/**").permitAll()
+                .antMatchers("/comments/**").permitAll()
+                .antMatchers("/profiles/**").permitAll()
                 .anyRequest().authenticated()
-
-
 
                 .and()
                 .apply(new JwtSecurityConfiguration(SECRET_KEY, tokenProvider, userDetailsService));
