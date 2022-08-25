@@ -145,4 +145,18 @@ public class MemberService {
         }
         return tokenProvider.getMemberFromAuthentication();
     }
+
+    public ResponseEntity<?> loginIdCheck(String loginId) {
+        if (loginId.matches("\\d{10,11}")) {
+            if (memberRepository.findByPhoneNum(loginId).isPresent()) {
+                throw new CustomException(ErrorCode.DUPLICATED_NICKNAME);
+            }
+            ;
+        } else if (loginId.matches("[a-zA-Z\\d]{3,15}@[a-zA-Z\\d]{3,15}[.][a-zA-Z]{2,5}")) {
+            if (memberRepository.findByEmail(loginId).isPresent()) {
+                throw new CustomException(ErrorCode.DUPLICATED_NICKNAME);
+            }
+        }
+        return new ResponseEntity<>("사용이 가능합니다.", HttpStatus.OK);
+    }
 }

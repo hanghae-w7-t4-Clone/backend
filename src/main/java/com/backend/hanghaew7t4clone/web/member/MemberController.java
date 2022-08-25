@@ -34,6 +34,10 @@ public class MemberController {
         return memberService.nickCheck(loginId);
     }
 
+    @PostMapping("/login-id-check")
+    public ResponseEntity<?> loginIdCheck(@RequestBody String loginId){
+        return memberService.loginIdCheck(loginId);
+    }
 
     @PostMapping("/refresh-token")
     public ResponseEntity<?> refreshTokenCheck( HttpServletRequest request, HttpServletResponse response){
