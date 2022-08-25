@@ -3,14 +3,11 @@ package com.backend.hanghaew7t4clone.domain.member;
 
 import com.backend.hanghaew7t4clone.global.exception.CustomException;
 import com.backend.hanghaew7t4clone.global.exception.ErrorCode;
-import com.backend.hanghaew7t4clone.global.jwt.RefreshToken;
-import com.backend.hanghaew7t4clone.global.jwt.RefreshTokenRepository;
-import com.backend.hanghaew7t4clone.global.jwt.TokenDto;
-import com.backend.hanghaew7t4clone.global.jwt.TokenProvider;
+import com.backend.hanghaew7t4clone.domain.member.jwt.RefreshToken;
+import com.backend.hanghaew7t4clone.domain.member.jwt.RefreshTokenRepository;
+import com.backend.hanghaew7t4clone.domain.member.jwt.TokenDto;
+import com.backend.hanghaew7t4clone.domain.member.jwt.TokenProvider;
 import com.backend.hanghaew7t4clone.global.shared.Message;
-import com.backend.hanghaew7t4clone.web.member.LoginRequestDto;
-import com.backend.hanghaew7t4clone.web.member.LoginResponseDto;
-import com.backend.hanghaew7t4clone.web.member.MemberRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -85,21 +82,21 @@ public class MemberService {
     public Member defineId(String loginId){
         if (loginId.matches("\\d{10,11}")) {
             return memberRepository.findByPhoneNum(loginId).orElse(null);
-        } else if (loginId.matches("[a-zA-Z\\d]{3,15}@[a-zA-Z\\d]{3,15}[.][a-zA-Z]{2,5}")) {
-            return memberRepository.findByEmail(loginId).orElse(null);
-        } else {
-            return memberRepository.findByNickname(loginId).orElse(null);
         }
+        if (loginId.matches("[a-zA-Z\\d]{3,15}@[a-zA-Z\\d]{3,15}[.][a-zA-Z]{2,5}")) {
+            return memberRepository.findByEmail(loginId).orElse(null);
+        }
+        return memberRepository.findByNickname(loginId).orElse(null);
     }
 
     @Transactional(readOnly = true)
     public Member isPresentMember(String nickname) {
         Optional<Member> optionalMember = memberRepository.findByNickname(nickname);
-        return optionalMember.orElse(null);
+        return optionalMember.orElseThrow();
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity<?> nickCheck(String loginId){
+    public ResponseEntity<?> nicknameCheck(String loginId){
         if (null != isPresentMember(loginId)) {
            throw new CustomException(ErrorCode.DUPLICATED_NICKNAME);}
         return new ResponseEntity<>(Message.success(null),HttpStatus.OK);

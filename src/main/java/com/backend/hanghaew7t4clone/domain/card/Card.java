@@ -4,7 +4,6 @@ import com.backend.hanghaew7t4clone.domain.comment.Comment;
 import com.backend.hanghaew7t4clone.domain.likes.Likes;
 import com.backend.hanghaew7t4clone.domain.member.Member;
 import com.backend.hanghaew7t4clone.global.shared.Timestamped;
-import com.backend.hanghaew7t4clone.web.card.CardRequestDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,13 +32,13 @@ public class Card extends Timestamped {
    private Set<String> imgUrlList;
 
    @Column
-   private int likeCount;
+   private Integer likeCount;
 
    @Column(nullable = false)
    private String content;
 
    @Column
-   private int commentCount;
+   private Integer commentCount;
 
    @Column
    private String place;

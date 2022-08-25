@@ -4,8 +4,6 @@ import com.backend.hanghaew7t4clone.domain.card.Card;
 import com.backend.hanghaew7t4clone.domain.member.Member;
 import com.backend.hanghaew7t4clone.global.shared.Check;
 import com.backend.hanghaew7t4clone.global.shared.Message;
-import com.backend.hanghaew7t4clone.web.comment.CommentRequestDto;
-import com.backend.hanghaew7t4clone.web.comment.CommentResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

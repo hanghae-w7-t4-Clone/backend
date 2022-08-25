@@ -8,7 +8,6 @@ import com.backend.hanghaew7t4clone.domain.member.Member;
 import com.backend.hanghaew7t4clone.domain.recomment.ReComment;
 import com.backend.hanghaew7t4clone.global.shared.Check;
 import com.backend.hanghaew7t4clone.global.shared.Message;
-import com.backend.hanghaew7t4clone.web.likes.LikesResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -27,7 +26,7 @@ private final Check check;
 private final LikesRepository likesRepository;
 
     @Transactional
-    public ResponseEntity<?> pushCardLikes(Long cardId, HttpServletRequest request) {
+    public ResponseEntity <?> pushCardLikes(Long cardId, HttpServletRequest request) {
         Member member = check.validateMember(request);
         check.accessTokenCheck(request,member);
         Card card = check.isPresentCard(cardId);
@@ -38,21 +37,17 @@ private final LikesRepository likesRepository;
     }
 
     @Transactional
-    public ResponseEntity<?> pushCommentLikes (Long id, HttpServletRequest request) {
-
+    public ResponseEntity <?> pushCommentLikes (Long id, HttpServletRequest request) {
         Member member = check.validateMember(request);
         check.accessTokenCheck(request,member);
-
         Comment comment = check.isPresentComment(id);
-
         Likes likesToCommentByMember = likesRepository.findByCommentAndMember(comment, member).orElse(null);
         LikesResponseDto likesResponseDto =commentLikeStatus(likesToCommentByMember,member,comment)    ;
         return new ResponseEntity<>(Message.success(likesResponseDto), HttpStatus.OK);
         }
 
     @Transactional
-
-    public ResponseEntity<?> pushReCommentLikes(Long id, HttpServletRequest request) {
+    public ResponseEntity <?> pushReCommentLikes(Long id, HttpServletRequest request) {
         Member member = check.validateMember(request);
         check.accessTokenCheck(request,member);
         ReComment reComment = check.isPresentReComment(id);
@@ -78,7 +73,6 @@ private final LikesRepository likesRepository;
     }
     public LikesResponseDto commentLikeStatus(Likes likesByUser, Member member, Comment comment) {
         if (likesByUser == null) {
-
             Likes likes = new Likes(member, comment);
             likesRepository.save(likes);
             List<Likes> likeList = likesRepository.findAllByComment(comment);
@@ -90,8 +84,6 @@ private final LikesRepository likesRepository;
             List<Likes> likeList = likesRepository.findAllByComment(comment);
             comment.updateLikes(likeList.size());
             return new LikesResponseDto(comment.getId(), false, "좋아요를 취소했습니다.");
-
-
         }
     }
 

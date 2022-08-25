@@ -1,10 +1,10 @@
 package com.backend.hanghaew7t4clone.global.configuration;
 
 
-import com.backend.hanghaew7t4clone.global.jwt.AccessDeniedHandlerException;
-import com.backend.hanghaew7t4clone.global.jwt.AuthenticationEntryPointException;
-import com.backend.hanghaew7t4clone.global.jwt.TokenProvider;
-import com.backend.hanghaew7t4clone.global.jwt.UserDetailsServiceImpl;
+import com.backend.hanghaew7t4clone.domain.member.jwt.AccessDeniedHandlerException;
+import com.backend.hanghaew7t4clone.domain.member.jwt.AuthenticationEntryPointException;
+import com.backend.hanghaew7t4clone.domain.member.jwt.TokenProvider;
+import com.backend.hanghaew7t4clone.domain.member.jwt.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;

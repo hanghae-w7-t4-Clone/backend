@@ -5,7 +5,6 @@ import com.backend.hanghaew7t4clone.domain.likes.Likes;
 import com.backend.hanghaew7t4clone.domain.member.Member;
 import com.backend.hanghaew7t4clone.domain.recomment.ReComment;
 import com.backend.hanghaew7t4clone.global.shared.Timestamped;
-import com.backend.hanghaew7t4clone.web.comment.CommentResponseDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

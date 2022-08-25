@@ -1,9 +1,9 @@
 package com.backend.hanghaew7t4clone.global.configuration;
 
 
-import com.backend.hanghaew7t4clone.global.jwt.JwtFilter;
-import com.backend.hanghaew7t4clone.global.jwt.TokenProvider;
-import com.backend.hanghaew7t4clone.global.jwt.UserDetailsServiceImpl;
+import com.backend.hanghaew7t4clone.domain.member.jwt.JwtFilter;
+import com.backend.hanghaew7t4clone.domain.member.jwt.TokenProvider;
+import com.backend.hanghaew7t4clone.domain.member.jwt.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

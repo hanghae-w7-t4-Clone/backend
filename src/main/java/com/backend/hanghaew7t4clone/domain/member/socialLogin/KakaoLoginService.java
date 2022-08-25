@@ -3,8 +3,7 @@ package com.backend.hanghaew7t4clone.domain.member.socialLogin;
 
 import com.backend.hanghaew7t4clone.domain.member.Member;
 import com.backend.hanghaew7t4clone.domain.member.MemberRepository;
-import com.backend.hanghaew7t4clone.global.jwt.UserDetailsImpl;
-import com.backend.hanghaew7t4clone.web.member.socialLogin.KakaoMemberInfoDto;
+import com.backend.hanghaew7t4clone.domain.member.jwt.UserDetailsImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

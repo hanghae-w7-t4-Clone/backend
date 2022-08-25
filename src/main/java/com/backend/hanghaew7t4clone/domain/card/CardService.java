@@ -1,14 +1,12 @@
 package com.backend.hanghaew7t4clone.domain.card;
 
 import com.backend.hanghaew7t4clone.domain.comment.Comment;
-import com.backend.hanghaew7t4clone.web.comment.CommentResponseDto;
+import com.backend.hanghaew7t4clone.domain.comment.CommentResponseDto;
 import com.backend.hanghaew7t4clone.domain.comment.CommentService;
 import com.backend.hanghaew7t4clone.domain.likes.LikeCountSort;
 import com.backend.hanghaew7t4clone.domain.member.Member;
 import com.backend.hanghaew7t4clone.global.shared.Check;
 import com.backend.hanghaew7t4clone.global.shared.Message;
-import com.backend.hanghaew7t4clone.web.card.CardRequestDto;
-import com.backend.hanghaew7t4clone.web.card.CardResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

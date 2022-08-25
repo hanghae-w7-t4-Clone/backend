@@ -18,8 +18,6 @@ public class LikeCountSort implements Comparator<Comment> {
             ret = 1;
          } else {
             ret = -1;
-
-
          }
       }
 return ret;

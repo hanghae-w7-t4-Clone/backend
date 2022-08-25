@@ -6,7 +6,6 @@ import com.backend.hanghaew7t4clone.domain.comment.CommentRepository;
 import com.backend.hanghaew7t4clone.domain.member.Member;
 import com.backend.hanghaew7t4clone.global.shared.Check;
 import com.backend.hanghaew7t4clone.global.shared.Message;
-import com.backend.hanghaew7t4clone.web.recomment.ReCommentRequestDto;
 import com.backend.hanghaew7t4clone.web.recomment.ReCommentResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
