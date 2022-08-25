@@ -25,10 +25,10 @@ public class Member extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(unique = true)
     private String email;
 
-    @Column
+    @Column(unique = true)
     private String phoneNum;
 
     @Column(nullable = false)
