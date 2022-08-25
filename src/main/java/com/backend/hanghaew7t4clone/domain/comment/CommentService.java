@@ -43,7 +43,8 @@ public class CommentService {
         commentRepository.save(comment);
         int commentCount = commentRepository.findAllByCardOrderByCreatedAtDesc(card).size();
         card.updateComment(commentCount);
-        return new ResponseEntity<>(Message.success("댓글 작성에 성공하셨습니다."), HttpStatus.OK);
+        CommentResponseDto commentResponseDto = new CommentResponseDto(member.getProfilePhoto(), member.getNickname(), commentRequestDto.getContent(),0);
+        return new ResponseEntity<>(Message.success(commentResponseDto), HttpStatus.OK);
     }
 
     //코멘트에 null값 있을 때 에러코드로 trow new 예외처리
