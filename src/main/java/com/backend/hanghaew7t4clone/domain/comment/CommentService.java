@@ -30,7 +30,6 @@ public class CommentService {
         return new ResponseEntity<>(Message.success(commentResponseDtoList), HttpStatus.OK);
     }
 
-
     @Transactional
     public ResponseEntity<?> createComment(CommentRequestDto commentRequestDto, Long cardId, HttpServletRequest request) {
         Member member = check.validateMember(request);
@@ -43,11 +42,13 @@ public class CommentService {
         commentRepository.save(comment);
         int commentCount = commentRepository.findAllByCardOrderByCreatedAtDesc(card).size();
         card.updateComment(commentCount);
-        CommentResponseDto commentResponseDto = new CommentResponseDto(member.getProfilePhoto(), member.getNickname(), commentRequestDto.getContent(),0);
-        return new ResponseEntity<>(Message.success(commentResponseDto), HttpStatus.OK);
+        return new ResponseEntity<>(Message.success(CommentResponseDto.builder()
+                .id(comment.getId())
+                .content(comment.getContent())
+                .nickname(comment.getMember().getNickname())
+                .profilePhoto(comment.getMember().getProfilePhoto())
+                .build()), HttpStatus.OK);
     }
-
-    //코멘트에 null값 있을 때 에러코드로 trow new 예외처리
 
     @Transactional
     public ResponseEntity<?> deleteComment(Long cardId, Long commentId, HttpServletRequest request) {
@@ -60,7 +61,7 @@ public class CommentService {
         check.commentCheck(comment);
         check.commentAuthorCheck(member, comment);
         commentRepository.delete(comment);
-        return new ResponseEntity<>(Message.success("댓글 삭제에 성공하셨습니다."), HttpStatus.OK);
+        return new ResponseEntity<>(Message.success(commentId), HttpStatus.OK);
 
     }
 
