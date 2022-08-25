@@ -35,15 +35,16 @@ public class CommentService {
         check.memberCheck(member);
         Card card = check.isPresentCard(cardId);
         check.cardCheck(card);
+        check.commentNullCheck(commentRequestDto);
         check.accessTokenCheck(request, member);
         Comment comment = new Comment(commentRequestDto.getContent(), member, card);
         commentRepository.save(comment);
-        int commentCount = commentRepository.findAllByCard(card).size();
+        int commentCount = commentRepository.findAllByCardOrderByCreatedAtDesc(card).size();
         card.updateComment(commentCount);
         return new ResponseEntity<>(Message.success("댓글 작성에 성공하셨습니다."), HttpStatus.OK);
     }
 
-    // 코멘트를 적을 때
+    //코멘트에 null값 있을 때 에러코드로 trow new 예외처리
 
     @Transactional
     public ResponseEntity<?> deleteComment(Long cardId, Long commentId, HttpServletRequest request) {

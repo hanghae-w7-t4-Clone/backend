@@ -4,6 +4,7 @@ import com.backend.hanghaew7t4clone.card.Card;
 import com.backend.hanghaew7t4clone.card.CardRepository;
 import com.backend.hanghaew7t4clone.comment.Comment;
 import com.backend.hanghaew7t4clone.comment.CommentRepository;
+import com.backend.hanghaew7t4clone.comment.CommentRequestDto;
 import com.backend.hanghaew7t4clone.exception.CustomException;
 import com.backend.hanghaew7t4clone.exception.ErrorCode;
 import com.backend.hanghaew7t4clone.jwt.TokenProvider;
@@ -38,6 +39,10 @@ public class Check {
     }
     public void commentAuthorCheck(Member member, Comment comment){
         if (!comment.getMember().equals(member))  throw new CustomException(ErrorCode.NOT_AUTHOR);
+    }
+
+    public void commentNullCheck(CommentRequestDto commentRequestDto) {
+        if (commentRequestDto.getContent() == null) throw new CustomException(ErrorCode.CONTENT_NOT_FOUND);
     }
 
     public void reCommentAuthorCheck(Member member,ReComment reComment) {
