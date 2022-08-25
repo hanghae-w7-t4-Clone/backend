@@ -10,6 +10,7 @@ import com.backend.hanghaew7t4clone.global.jwt.TokenProvider;
 import com.backend.hanghaew7t4clone.domain.member.Member;
 import com.backend.hanghaew7t4clone.domain.recomment.ReComment;
 import com.backend.hanghaew7t4clone.domain.recomment.ReCommentRepository;
+import com.backend.hanghaew7t4clone.web.comment.CommentRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
