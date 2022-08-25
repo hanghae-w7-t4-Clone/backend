@@ -21,4 +21,13 @@ public class CommentResponseDto {
         this.content = content;
         this.likeCount = likeCount;
     }
+
+    @Builder
+    public CommentResponseDto(String profilePhoto, String nickname, String content, int likeCount) {
+        this.id = getId();
+        this.profilePhoto = profilePhoto;
+        this.nickname = nickname;
+        this.content = content;
+        this.likeCount = likeCount;
+    }
 }
