@@ -12,6 +12,7 @@ public class ReCommentResponseDto {
     private String content;
     private String profilePhoto;
 
+    
     @Builder
     public ReCommentResponseDto(Long id, String nickname, String content, String profilePhoto) {
         this.id = id;
