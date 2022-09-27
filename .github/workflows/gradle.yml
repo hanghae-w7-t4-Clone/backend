@@ -87,8 +87,8 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.IAMSECRETKEY }}
       run: 
         aws deploy create-deployment 
-        --application-name planit
-        --deployment-group-name planit
+        --application-name planitit
+        --deployment-group-name planitit
         --file-exists-behavior OVERWRITE 
         --s3-location bucket=springbucketss,bundleType=zip,key=planit.zip
         --region ap-northeast-2
