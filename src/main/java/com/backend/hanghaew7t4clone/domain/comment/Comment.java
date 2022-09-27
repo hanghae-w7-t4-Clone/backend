@@ -8,6 +8,7 @@ import com.backend.hanghaew7t4clone.global.shared.Timestamped;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.Set;
